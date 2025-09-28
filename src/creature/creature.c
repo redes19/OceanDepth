@@ -10,8 +10,8 @@ void NameMonster(CreatureMarine *creatureMarine) {
     srand(time(NULL));
 
     const char *prefixes[] = {"Aqua", "Nero", "Mara", "Thalo", "Cora", "Hydro", "Medu"};
-    const char *milieux[]  = {"li", "ra", "ne", "do", "so", "mi"};
-    const char *suffixes[] = {"th", "na", "ra", "os", "on", "te"};
+    const char *milieux[]  = {"li", "ra", "ne", "do", "so", "co"};
+    const char *suffixes[] = {"th", "na", "ra", "os", "on", "te", "mi"};
 
     int nbrPre = sizeof(prefixes) / sizeof(prefixes[0]);
     int nbrMil = sizeof(milieux) / sizeof(milieux[0]);
@@ -37,16 +37,39 @@ void NameMonster(CreatureMarine *creatureMarine) {
 }
 
 void addStatsCreature(CreatureMarine *creatureMarine) {
-    
+    srand(time(NULL));
+    const char *prefixes[] = {"Aqua", "Nero", "Mara", "Thalo", "Cora", "Hydro", "Medu"};
+
+    const char *suffixes[] = {"th", "na", "ra", "os", "on", "te", "mi"};
+
+    int nbrPrefixes = sizeof(prefixes) / sizeof(prefixes[0]);
+    int nbrSuffixes = sizeof(suffixes) / sizeof(suffixes[0]);
+
+    // ajout des stats selon le prefixe
+    for (int i = 0; i < nbrPrefixes; i++) {
+        if (strncmp(creatureMarine->name, prefixes[i], strlen(prefixes[i])) == 0) {
+            if(strcmp(prefixes[i], "Medu") == 0 || strcmp(prefixes[i], "Cora") == 0 || strcmp(prefixes[i], "Thalo") == 0 ) {
+                printf("Life\n");
+                creatureMarine->max_life += rand() % (45 - 25 + 1) + 25;
+            } else if (strcmp(prefixes[i], "Aqua") == 0 || strcmp(prefixes[i], "Hydro") == 0 ) {
+                printf("Attack\n");
+                creatureMarine->max_attack += rand() % (20 - 5 + 1) + 5;
+            } else if (strcmp(prefixes[i], "Nero") == 0 || strcmp(prefixes[i], "Mara") == 0 ) {
+                printf("Speed\n");
+                creatureMarine->vitesse += rand() % (3 - 0 + 1) + 0;
+            }
+        }
+    }
+
+    // ajout des stats selon le suffixe
+
 }
 
 // fonction pour générer un monstre
-CreatureMarine *createCreature(int depth) {
+CreatureMarine *createCreature() {
     CreatureMarine *creatureMarine = malloc(sizeof(CreatureMarine));
     
     NameMonster(creatureMarine);
-
-    printf("%s\n", creatureMarine->name);
 
     // default params
     creatureMarine->is_alive = 1;
@@ -57,6 +80,10 @@ CreatureMarine *createCreature(int depth) {
 
     // fonction pour ajouter des stats aux créatures
     addStatsCreature(creatureMarine);
+
+    creatureMarine->life = creatureMarine->max_life;
+
+    printf("Name : %s life : %d attack : %d vitess : %d defense : %.2f\n", creatureMarine->name, creatureMarine->max_life, creatureMarine->max_attack, creatureMarine->vitesse, creatureMarine->defense);
     
 
     return creatureMarine;

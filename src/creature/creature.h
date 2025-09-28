@@ -17,6 +17,6 @@ typedef struct CreatureMarine {
 
 
 
-CreatureMarine *createCreature(int depth);
+CreatureMarine *createCreature();
 
 #endif
