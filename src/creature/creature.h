@@ -8,12 +8,15 @@ typedef struct CreatureMarine {
     int max_life;
     int min_attack;
     int max_attack;
-    int defense;
+    float defense; // la défense est un pourcentage qui réduira les dégats du joueur
     int vitesse;
     char *effect;
     int is_alive;
 
 } CreatureMarine;
 
+
+
+CreatureMarine *createCreature(int depth);
 
 #endif
