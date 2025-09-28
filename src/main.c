@@ -10,6 +10,7 @@ void afficher_intro() {
     printf("Souhaitez-vous commencer une nouvelle partie ? (oui/non)\n");
     printf("> ");
 }
+
 int main()
 {
     char *choix = malloc(sizeof(char)*100);
