@@ -56,12 +56,32 @@ void addStatsCreature(CreatureMarine *creatureMarine) {
                 creatureMarine->max_attack += rand() % (20 - 5 + 1) + 5;
             } else if (strcmp(prefixes[i], "Nero") == 0 || strcmp(prefixes[i], "Mara") == 0 ) {
                 printf("Speed\n");
-                creatureMarine->vitesse += rand() % (3 - 0 + 1) + 0;
+                creatureMarine->vitesse += rand() % (2 - 1 + 1) + 1;
             }
         }
     }
 
     // ajout des stats selon le suffixe
+    int nameLen = strlen(creatureMarine->name);
+    int indexSufixe = nameLen - 2; // 2 car tout les suffixe sont de taille 2 (a changer plus tard)
+
+    for (int i = 0; i < nbrSuffixes; i++) {
+        if(strcmp(creatureMarine->name + indexSufixe, suffixes[i]) == 0) {
+            if (strcmp(suffixes[i], "os") == 0 || strcmp(suffixes[i], "mi") == 0) {
+                printf("Vitess\n");
+                creatureMarine->vitesse += rand() % (2 - 1 + 1) + 1;
+            } else if (strcmp(suffixes[i], "ra") == 0 || strcmp(suffixes[i], "th") == 0) {
+                printf("Dfense\n");
+                creatureMarine->defense += (rand() % 21 + 10) / 100.0f;
+            } else if (strcmp(suffixes[i], "os") == 0) {
+                printf("attack\n");
+                creatureMarine->max_attack += rand() % (15 - 5 + 1) + 5;
+            } else if (strcmp(suffixes[i], "on") == 0 || strcmp(suffixes[i], "te") == 0) {
+                printf("Effect\n");
+                // add effect
+            }
+        }
+    }
 
 }
 
