@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "joueur/joueur.h"
+#include "joueur/joueur.c"
 
 void afficher_intro() {
     printf("=====================================\n");
@@ -18,7 +20,8 @@ int main()
     scanf("%s", choix);
     while (fin) {
         if (strcmp(choix, "oui") == 0 || strcmp(choix, "OUI") == 0) {
-            printf("\nParfait ! Préparez votre harpon... l’aventure commence !\n");
+            Plongeur *plongeur = initializePlongeur();
+            printPlongeur(plongeur,50);
             fin = 0;
         } else if (strcmp(choix, "non") == 0 || strcmp(choix, "NON") == 0) {
             printf("\nVous avez choisi de rester en surface. À bientôt ! \n");
