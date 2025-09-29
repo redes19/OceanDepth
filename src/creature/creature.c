@@ -5,6 +5,7 @@
 
 #include "creature.h"
 
+// Génération du nom des monstres aléatoirement
 void NameMonster(CreatureMarine *creatureMarine) {
 
     srand(time(NULL));
@@ -36,6 +37,7 @@ void NameMonster(CreatureMarine *creatureMarine) {
 
 }
 
+// Ajout de stats au monstre selon leur nom
 void addStatsCreature(CreatureMarine *creatureMarine) {
     srand(time(NULL));
     const char *prefixes[] = {"Aqua", "Nero", "Mara", "Thalo", "Cora", "Hydro", "Medu"};
@@ -85,8 +87,29 @@ void addStatsCreature(CreatureMarine *creatureMarine) {
 
 }
 
+// initialise les stats poura augmenter la difficulté des monstres selon la profondeur
+void DifficultyOfMonster(int depth, CreatureMarine *creatureMarine) {
+    if ( depth >= 50 && depth < 150) {
+        printf("depth entre 50 et 150\n");
+        creatureMarine->max_life += 25;
+        creatureMarine->vitesse += 1;
+        creatureMarine->max_attack += 13;
+    } else if (depth >= 150 && depth < 300) {
+        printf("depth entre 150 et 300\n");
+        creatureMarine->max_life += 60;
+        creatureMarine->vitesse += 2;
+        creatureMarine->max_attack += 28;
+    } else if (depth >= 300) {
+        printf("depth audessus de 300\n");
+        creatureMarine->max_life += 100;
+        creatureMarine->vitesse += 3;
+        creatureMarine->max_attack += 34;
+    }
+}
+
+
 // fonction pour générer un monstre
-CreatureMarine *createCreature() {
+CreatureMarine *createCreature(int depth) {
     CreatureMarine *creatureMarine = malloc(sizeof(CreatureMarine));
     
     NameMonster(creatureMarine);
@@ -100,6 +123,9 @@ CreatureMarine *createCreature() {
 
     // fonction pour ajouter des stats aux créatures
     addStatsCreature(creatureMarine);
+    DifficultyOfMonster(depth, creatureMarine);
+
+    printf("depth %d\n", depth);
 
     creatureMarine->life = creatureMarine->max_life;
 

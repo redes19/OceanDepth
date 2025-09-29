@@ -18,7 +18,7 @@ int main()
     char *choix = malloc(sizeof(char)*100);
     int fin = 1;
 
-    int depth;
+    int depth = 49;
 
     afficher_intro();
     scanf("%s", choix);
@@ -26,7 +26,7 @@ int main()
         if (strcmp(choix, "oui") == 0 || strcmp(choix, "OUI") == 0) {
             printf("\nParfait ! Préparez votre harpon... l’aventure commence !\n");
             printf("Name of Monster : \n");
-            createCreature();
+            createCreature(depth);
             fin = 0;
         } else if (strcmp(choix, "non") == 0 || strcmp(choix, "NON") == 0) {
             printf("\nVous avez choisi de rester en surface. À bientôt ! \n");
