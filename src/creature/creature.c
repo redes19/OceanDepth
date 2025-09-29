@@ -110,15 +110,17 @@ void DifficultyOfMonster(int depth, CreatureMarine *creatureMarine) {
 
 // fonction pour générer un monstre
 CreatureMarine *createCreature(int depth) {
+    srand(time(NULL));
+
     CreatureMarine *creatureMarine = malloc(sizeof(CreatureMarine));
     
     NameMonster(creatureMarine);
 
     // default params
     creatureMarine->is_alive = 1;
-    creatureMarine->max_life = 30;
+    creatureMarine->max_life = rand() % (35 - 25 + 1) + 25;
     creatureMarine->defense = 0;
-    creatureMarine->max_attack = 8;
+    creatureMarine->max_attack = rand() % (12 - 8 + 1) + 8;
     creatureMarine->vitesse = 1;
 
     // fonction pour ajouter des stats aux créatures
