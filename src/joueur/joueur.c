@@ -25,15 +25,26 @@ void printPlongeur(Plongeur *plongeur, int profondeur) {
         }
     }
     printf("] %d/%d\n",plongeur->points_de_vie,plongeur->points_de_vie_max);
+
+
     printf("Oxygene : [");
-    for (int i = 0; i < plongeur->niveau_oxygene_max; i++ ) {
-        if (plongeur->niveau_oxygene >= i) {
+    // Boucle qui parcourt de 0 jusqu’au niveau maximum d’oxygène du plongeur
+    for (int i = 0; i < plongeur->niveau_oxygene_max; i++) {
+
+        // Si le niveau d’oxygène actuel est supérieur à l’index i
+        // -> On affiche une barre pleine (|)
+        if (i < plongeur->niveau_oxygene) {
             printf("|");
-        }else {
+        }
+        // Sinon (l’oxygène restant est inférieur à i)
+        // -> On affiche une barre vide (-)
+        else {
             printf("-");
         }
     }
     printf("] %d/%d\n",plongeur->niveau_oxygene,plongeur->niveau_oxygene_max);
+
+
     printf("Fatigue : [");
     for (int i = 0; i < 6; i++ ) {
         if (plongeur->niveau_fatigue <= i) {

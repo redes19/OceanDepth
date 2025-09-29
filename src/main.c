@@ -18,15 +18,16 @@ int main()
     int fin = 1;
     afficher_intro();
     scanf("%s", choix);
-    while (fin) {
+
+    while (fin) {//boucle tant que le jeu n'ai pas fini
         if (strcmp(choix, "oui") == 0 || strcmp(choix, "OUI") == 0) {
-            Plongeur *plongeur = initializePlongeur();
-            printPlongeur(plongeur,50);
-            fin = 0;
+            Plongeur *joueur = initializePlongeur();// création du joueur
+            printPlongeur(joueur,50);//affichaage du joueur
+            fin = 0;//fin du jeu
         } else if (strcmp(choix, "non") == 0 || strcmp(choix, "NON") == 0) {
             printf("\nVous avez choisi de rester en surface. À bientôt ! \n");
-            fin = 0;
-        } else {
+            fin = 0;//fin du jeu
+        } else {//répéte la question
             printf("\nRéponse invalide. Veuillez taper 'oui' ou 'non'.\n");
         }
     }
