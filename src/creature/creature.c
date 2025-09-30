@@ -137,4 +137,3 @@ CreatureMarine *createCreature(int depth) {
     return creatureMarine;
 }
 
-// fonction qui définira combien de monstre devra être générer et seront enregister dans un tableau
