@@ -3,7 +3,7 @@
 #include "joueur.h"
 
 
-Plongeur *initializePlongeur() {
+Plongeur *initializePlongeur(Zone zone) {
     Plongeur *plongeur = malloc(sizeof(Plongeur));
     plongeur->points_de_vie = 100;
     plongeur->points_de_vie_max = 100;
@@ -11,11 +11,12 @@ Plongeur *initializePlongeur() {
     plongeur->niveau_oxygene_max = 100;
     plongeur->niveau_fatigue = 0;
     plongeur->perles = 0;
+    plongeur->zone = zone;
     return plongeur;
 }
 
-void printPlongeur(Plongeur *plongeur, int profondeur) {
-    printf("OceanDepths - Profondeur: %dm      Perle: %d\n",profondeur,plongeur->perles);
+void printPlongeur(Plongeur *plongeur) {
+    printf("OceanDepths - Zone: %s      Profondeur: %dm      Perle: %d\n",plongeur->zone.nom,plongeur->zone.profondeur,plongeur->perles);
     printf("Vie : [");
     for (int i = 0; i < plongeur->points_de_vie_max; i++ ) {
         if (plongeur->points_de_vie >= i) {
@@ -54,4 +55,32 @@ void printPlongeur(Plongeur *plongeur, int profondeur) {
         }
     }
     printf("] %d/5\n",plongeur->niveau_fatigue);
+}
+
+void perteO2(Plongeur *plongeur) {
+    if (plongeur->zone.profondeur<=100) {
+        if (plongeur->niveau_oxygene >=2) {
+            plongeur->niveau_oxygene -=2;
+        }else {
+            plongeur->points_de_vie -=5;
+        }
+    }else if (plongeur->zone.profondeur<=200) {
+        if (plongeur->niveau_oxygene >=3) {
+            plongeur->niveau_oxygene -=3;
+        }else {
+            plongeur->points_de_vie -=5;
+        }
+    }else if (plongeur->zone.profondeur<=300) {
+        if (plongeur->niveau_oxygene >=4) {
+            plongeur->niveau_oxygene -=4;
+        }else {
+            plongeur->points_de_vie -=5;
+        }
+    }else if (plongeur->zone.profondeur > 300) {
+        if (plongeur->niveau_oxygene >=5) {
+            plongeur->niveau_oxygene -=5;
+        }else {
+            plongeur->points_de_vie -=5;
+        }
+    }
 }
