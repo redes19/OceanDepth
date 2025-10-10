@@ -54,13 +54,13 @@ void addStatsCreature(CreatureMarine *creatureMarine) {
     for (int i = 0; i < nbrPrefixes; i++) {
         if (strncmp(creatureMarine->name, prefixes[i], strlen(prefixes[i])) == 0) {
             if(strcmp(prefixes[i], "Medu") == 0 || strcmp(prefixes[i], "Cora") == 0 || strcmp(prefixes[i], "Thalo") == 0 ) {
-                printf("Life\n");
+                // printf("Life\n");
                 creatureMarine->max_life += rand() % (45 - 25 + 1) + 25;
             } else if (strcmp(prefixes[i], "Aqua") == 0 || strcmp(prefixes[i], "Hydro") == 0 ) {
-                printf("Attack\n");
+                // printf("Attack\n");
                 creatureMarine->max_attack += rand() % (20 - 5 + 1) + 5;
             } else if (strcmp(prefixes[i], "Nero") == 0 || strcmp(prefixes[i], "Mara") == 0 ) {
-                printf("Speed\n");
+                // printf("Speed\n");
                 creatureMarine->vitesse += rand() % (2 - 1 + 1) + 1;
             }
         }
@@ -73,16 +73,16 @@ void addStatsCreature(CreatureMarine *creatureMarine) {
     for (int i = 0; i < nbrSuffixes; i++) {
         if(strcmp(creatureMarine->name + indexSufixe, suffixes[i]) == 0) {
             if (strcmp(suffixes[i], "os") == 0 || strcmp(suffixes[i], "mi") == 0) {
-                printf("Vitess\n");
+                // printf("Vitess\n");
                 creatureMarine->vitesse += rand() % (2 - 1 + 1) + 1;
             } else if (strcmp(suffixes[i], "ra") == 0 || strcmp(suffixes[i], "th") == 0) {
-                printf("Dfense\n");
+                // printf("Dfense\n");
                 creatureMarine->defense += (rand() % 21 + 10) / 100.0f;
             } else if (strcmp(suffixes[i], "os") == 0) {
-                printf("attack\n");
+                // printf("attack\n");
                 creatureMarine->max_attack += rand() % (15 - 5 + 1) + 5;
             } else if (strcmp(suffixes[i], "on") == 0 || strcmp(suffixes[i], "te") == 0) {
-                printf("Effect\n");
+                // printf("Effect\n");
                 // add effect
             }
         }
@@ -130,17 +130,17 @@ CreatureMarine *createCreature(int depth) {
     addStatsCreature(creatureMarine);
     DifficultyOfMonster(depth, creatureMarine);
 
-    printf("depth %d\n", depth);
 
     creatureMarine->life = creatureMarine->max_life;
 
-    printf("Name : %s life : %d attack : %d vitess : %d defense : %.2f\n", creatureMarine->name, creatureMarine->max_life, creatureMarine->max_attack, creatureMarine->vitesse, creatureMarine->defense);
+    // printf("Name : %s life : %d attack : %d vitess : %d defense : %.2f\n", creatureMarine->name, creatureMarine->max_life, creatureMarine->max_attack, creatureMarine->vitesse, creatureMarine->defense);
     
 
     return creatureMarine;
 }
 
 int generateCreatureInTab(int n, int depth) {
+    printf("Generate Creature\n");
     if (n <= 0) {
         fprintf(stderr, "Erreur nombre de creature < a 1");
         return -1;
@@ -153,16 +153,31 @@ int generateCreatureInTab(int n, int depth) {
         return -1;
     }
 
+    nb_creatures = 0;
+
+    printf("debut de boucle");
     for (int i = 0; i < n; i++) {
         CreatureMarine *newCreature = createCreature(depth);
         if (!newCreature) {
             fprintf(stderr, "Erreur dans l'allocation de memoire du tableau");
             return -1;
+            for (int j = 0; j < nb_creatures; j++) {
+                if (tabOfCreature[j].name) {
+                    free(tabOfCreature[j].name);
+                }
+            }
+            free(tabOfCreature);
+            tabOfCreature = NULL;
+            nb_creatures = 0;
+            return -1;
         }
-
+        
         tabOfCreature[nb_creatures++] = *newCreature;
         free(newCreature);
+
+        printf("nb creature : %d\n creature name : %s", nb_creatures, tabOfCreature[i].name);
     }
+    printf("fin de boucle");
 
     if (nb_creatures == 0) {
         fprintf(stderr, "Erreur aucune crature a pu etre creer");
@@ -195,3 +210,24 @@ void clearCreatureTab() {
 }
 
 
+void displayCreature() {
+    printf("Display Creature\n");
+
+    if (!tabOfCreature || nb_creatures == 0) {
+        fprintf(stderr, "Pas de creature generer");
+        return;
+    }
+
+
+    for (int i = 0; i < nb_creatures; i++) {
+        printf("\n----------------------------------\n");
+        printf("\nCreature : %d", i + 1);
+        printf("\nName : %s", tabOfCreature[i].name);
+        printf("\nVie : %d", tabOfCreature[i].max_life);
+        printf("\nDefense : %f", tabOfCreature[i].defense);
+        printf("\nVitesse : %d", tabOfCreature[i].vitesse);
+        printf("\n---------------------------------\n");       
+    }
+
+    return;
+}

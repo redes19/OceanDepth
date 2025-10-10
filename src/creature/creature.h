@@ -23,4 +23,8 @@ typedef struct CreatureMarine {
 
 CreatureMarine *createCreature(int depth);
 
+
+int generateCreatureInTab(int n, int depth);
+void displayCreature();
+
 #endif
