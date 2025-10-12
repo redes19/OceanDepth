@@ -7,11 +7,18 @@
 
 CreatureMarine *tabOfCreature = NULL;
 int nb_creatures = 0;
+static int random_initialized = 0;
+
+// Fonction pour initialiser le générateur aléatoire une seule fois
+void initRandom() {
+    if (!random_initialized) {
+        srand(time(NULL));
+        random_initialized = 1;
+    }
+}
 
 // Génération du nom des monstres aléatoirement
 void NameMonster(CreatureMarine *creatureMarine) {
-
-    srand(time(NULL));
 
     const char *prefixes[] = {"Aqua", "Nero", "Mara", "Thalo", "Cora", "Hydro", "Medu"};
     const char *milieux[]  = {"li", "ra", "ne", "do", "so", "co"};
@@ -37,12 +44,10 @@ void NameMonster(CreatureMarine *creatureMarine) {
     strcat(name, su);
 
     creatureMarine->name = name;
-
 }
 
 // Ajout de stats au monstre selon leur nom
 void addStatsCreature(CreatureMarine *creatureMarine) {
-    srand(time(NULL));
     const char *prefixes[] = {"Aqua", "Nero", "Mara", "Thalo", "Cora", "Hydro", "Medu"};
 
     const char *suffixes[] = {"th", "na", "ra", "os", "on", "te", "mi"};
@@ -113,7 +118,9 @@ void DifficultyOfMonster(int depth, CreatureMarine *creatureMarine) {
 
 // fonction pour générer un monstre
 CreatureMarine *createCreature(int depth) {
-    srand(time(NULL));
+    // printf("\nCreate Creature\n");
+
+    initRandom();
 
     CreatureMarine *creatureMarine = malloc(sizeof(CreatureMarine));
     
@@ -133,20 +140,18 @@ CreatureMarine *createCreature(int depth) {
 
     creatureMarine->life = creatureMarine->max_life;
 
-    // printf("Name : %s life : %d attack : %d vitess : %d defense : %.2f\n", creatureMarine->name, creatureMarine->max_life, creatureMarine->max_attack, creatureMarine->vitesse, creatureMarine->defense);
-    
-
     return creatureMarine;
 }
 
 int generateCreatureInTab(int n, int depth) {
-    printf("Generate Creature\n");
+    // printf("Generate Creature\n");
+    
     if (n <= 0) {
         fprintf(stderr, "Erreur nombre de creature < a 1");
         return -1;
     }
 
-    tabOfCreature = malloc(sizeof(createCreature) * n);
+    tabOfCreature = malloc(sizeof(CreatureMarine) * n);
 
     if (!tabOfCreature) {
         fprintf(stderr, "Erreur dans l'allocation de memoire du tableau");
@@ -155,12 +160,10 @@ int generateCreatureInTab(int n, int depth) {
 
     nb_creatures = 0;
 
-    printf("debut de boucle");
     for (int i = 0; i < n; i++) {
         CreatureMarine *newCreature = createCreature(depth);
         if (!newCreature) {
             fprintf(stderr, "Erreur dans l'allocation de memoire du tableau");
-            return -1;
             for (int j = 0; j < nb_creatures; j++) {
                 if (tabOfCreature[j].name) {
                     free(tabOfCreature[j].name);
@@ -172,43 +175,21 @@ int generateCreatureInTab(int n, int depth) {
             return -1;
         }
         
-        tabOfCreature[nb_creatures++] = *newCreature;
+        tabOfCreature[nb_creatures] = *newCreature;
+        tabOfCreature[nb_creatures].id = i;
+        nb_creatures++;
         free(newCreature);
 
-        printf("nb creature : %d\n creature name : %s", nb_creatures, tabOfCreature[i].name);
     }
-    printf("fin de boucle");
 
     if (nb_creatures == 0) {
         fprintf(stderr, "Erreur aucune crature a pu etre creer");
         return -1;
     }
 
-    printf("\n %d creatures créer avec succès \n", nb_creatures);
+    // printf("\n %d creatures créer avec succès \n", nb_creatures);
     return 0;
 }
-
-// Fonction pour vider le tableau
-void clearCreatureTab() {
-    if (!tabOfCreature) {
-        printf("[INFO] Aucun tableau à nettoyer.\n");
-        return;
-    }
-
-    for (int i = 0; i < nb_creatures; i++) {
-        if (tabOfCreature[i].name) {
-            free(tabOfCreature[i].name);
-            tabOfCreature[i].name = NULL;
-        }
-    }
-
-    free(tabOfCreature);
-    tabOfCreature = NULL;
-    nb_creatures = 0;
-
-    printf("Mémoire des créatures libérée avec succès.\n");
-}
-
 
 void displayCreature() {
     printf("Display Creature\n");
@@ -221,13 +202,36 @@ void displayCreature() {
 
     for (int i = 0; i < nb_creatures; i++) {
         printf("\n----------------------------------\n");
-        printf("\nCreature : %d", i + 1);
+        printf("\nCreature : %d", tabOfCreature[i].id);
         printf("\nName : %s", tabOfCreature[i].name);
         printf("\nVie : %d", tabOfCreature[i].max_life);
-        printf("\nDefense : %f", tabOfCreature[i].defense);
+        printf("\nDefense : %0.2f", tabOfCreature[i].defense);
         printf("\nVitesse : %d", tabOfCreature[i].vitesse);
         printf("\n---------------------------------\n");       
     }
 
     return;
+}
+
+// Fonction pour vider le tableau
+void cleanupAllCreatures() {
+    // printf("Nettoyage complet des créatures...\n");
+
+    // 1️⃣ Libération du tableau global s’il existe
+    if (tabOfCreature != NULL) {
+        for (int i = 0; i < nb_creatures; i++) {
+            if (tabOfCreature[i].name != NULL) {
+                free(tabOfCreature[i].name);
+                tabOfCreature[i].name = NULL;
+            }
+        }
+
+        free(tabOfCreature);
+        tabOfCreature = NULL;
+        nb_creatures = 0;
+
+        // printf("OK Tableau de créatures libéré.\n");
+    }
+
+    // printf("Nettoyage mémoire terminé.\n");
 }

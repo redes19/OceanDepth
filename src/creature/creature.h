@@ -27,4 +27,7 @@ CreatureMarine *createCreature(int depth);
 int generateCreatureInTab(int n, int depth);
 void displayCreature();
 
+// Fonction de free
+void cleanupAllCreatures();
+
 #endif
