@@ -4,6 +4,7 @@
 #include <time.h> 
 
 #include "creature/creature.h"
+#include "combat/combat.h"
 
 void afficher_intro() {
     printf("=====================================\n");
@@ -29,6 +30,9 @@ int main()
             printf("\nParfait ! Préparez votre harpon... l’aventure commence !\n");
             generateCreatureInTab(2, depth);
             // displayCreature();
+
+            initFight();
+
             cleanupAllCreatures();
             free(choix);
             fin = 0;

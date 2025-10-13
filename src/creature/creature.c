@@ -115,7 +115,6 @@ void DifficultyOfMonster(int depth, CreatureMarine *creatureMarine) {
     }
 }
 
-
 // fonction pour générer un monstre
 CreatureMarine *createCreature(int depth) {
     // printf("\nCreate Creature\n");
@@ -145,7 +144,7 @@ CreatureMarine *createCreature(int depth) {
 
 int generateCreatureInTab(int n, int depth) {
     // printf("Generate Creature\n");
-    
+
     if (n <= 0) {
         fprintf(stderr, "Erreur nombre de creature < a 1");
         return -1;

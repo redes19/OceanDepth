@@ -20,9 +20,11 @@ typedef struct CreatureMarine {
 
 } CreatureMarine;
 
+// Déclarations des variables globales
+extern CreatureMarine *tabOfCreature;
+extern int nb_creatures;
 
 CreatureMarine *createCreature(int depth);
-
 
 int generateCreatureInTab(int n, int depth);
 void displayCreature();
