@@ -5,9 +5,9 @@ CC = gcc
 CFLAGS = -Wall -Wextra -std=c99 -O2
 TARGET = oceandepth
 SRCDIR = src
-SOURCES = $(wildcard $(SRCDIR)/*.c)
+SOURCES = $(wildcard $(SRCDIR)/*.c) $(wildcard $(SRCDIR)/*/*.c)
 OBJECTS = $(SOURCES:.c=.o)
-HEADERS = $(wildcard $(SRCDIR)/*.h)
+HEADERS = $(wildcard $(SRCDIR)/*.h) $(wildcard $(SRCDIR)/*/*.h)
 
 # Règle par défaut
 all: $(TARGET)
@@ -26,8 +26,7 @@ clean:
 
 # Nettoyage complet (inclut les fichiers de sauvegarde)
 distclean: clean
-	rm -f *~ $(SRCDIR)/*~
+	rm -f *~ $(SRCDIR)/*~ $(SRCDIR)/*/*~
 
 # Reconstruction complète
 rebuild: clean all
-

@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h> 
+
+#include "creature/creature.h"
+#include "combat/combat.h"
 #include "joueur/joueur.h"
 #include "joueur/joueur.c"
 #include "carte/carte.h"
@@ -14,10 +18,15 @@ void afficher_intro() {
     printf("Souhaitez-vous commencer une nouvelle partie ? (oui/non)\n");
     printf("> ");
 }
+
 int main()
 {
+    srand(time(NULL));
     char *choix = malloc(sizeof(char)*100);
     int fin = 1;
+
+    int depth = 49;
+
     int action = 0;
     afficher_intro();
     scanf("%s", choix);
@@ -25,6 +34,15 @@ int main()
 
     while (fin) {//boucle tant que le jeu n'ai pas fini
         if (strcmp(choix, "oui") == 0 || strcmp(choix, "OUI") == 0) {
+            printf("\nParfait ! Préparez votre harpon... l’aventure commence !\n");
+            generateCreatureInTab(2, depth);
+            // displayCreature();
+
+            initFight();
+
+            cleanupAllCreatures();
+            free(choix);
+            fin = 0;
             Plongeur *joueur = initializePlongeur(zone[0]);// création du joueur
             printPlongeur(joueur);//affichage du joueur
             action=printZone(joueur);
@@ -47,6 +65,8 @@ int main()
         }
     }
 
+    cleanupAllCreatures();
+    free(choix); 
 
     return 0;
 }
