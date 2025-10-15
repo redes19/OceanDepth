@@ -8,7 +8,6 @@
 void optionActionPlayer() {
     printf("Que voulez-vous faire?\n");
     printf("1) Attaquer\n");
-    printf("");
 }
 
 void initFight() {
