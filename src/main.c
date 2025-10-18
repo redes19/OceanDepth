@@ -48,9 +48,8 @@ int main()
             }
 
             generateCreatureInTab(2, depth);
-            // displayCreature();
 
-            initFight();
+            initFight(joueur);
 
             cleanupAllCreatures();
             free(choix);

@@ -60,7 +60,7 @@ void addStatsCreature(CreatureMarine *creatureMarine) {
         if (strncmp(creatureMarine->name, prefixes[i], strlen(prefixes[i])) == 0) {
             if(strcmp(prefixes[i], "Medu") == 0 || strcmp(prefixes[i], "Cora") == 0 || strcmp(prefixes[i], "Thalo") == 0 ) {
                 // printf("Life\n");
-                creatureMarine->max_life += rand() % (45 - 25 + 1) + 25;
+                creatureMarine->max_life += rand() % (30 - 15 + 1) + 15;
             } else if (strcmp(prefixes[i], "Aqua") == 0 || strcmp(prefixes[i], "Hydro") == 0 ) {
                 // printf("Attack\n");
                 creatureMarine->max_attack += rand() % (20 - 5 + 1) + 5;

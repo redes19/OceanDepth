@@ -7,6 +7,8 @@ Plongeur *initializePlongeur(Zone zone) {
     Plongeur *plongeur = malloc(sizeof(Plongeur));
     plongeur->points_de_vie = 100;
     plongeur->points_de_vie_max = 100;
+    plongeur->attack = 20;
+    plongeur->vitesse = 2;
     plongeur->niveau_oxygene = 100;
     plongeur->niveau_oxygene_max = 100;
     plongeur->niveau_fatigue = 0;

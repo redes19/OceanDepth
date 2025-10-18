@@ -3,9 +3,16 @@
 
 #include "../carte/carte.h"
 
+typedef struct EffectAttack {
+    // code
+} EffectAttack;
+
 typedef struct Plongeur {
     int points_de_vie;
     int points_de_vie_max;
+    int attack;
+    EffectAttack efectAttack;
+    int vitesse;
     int niveau_oxygene;
     int niveau_oxygene_max;
     int niveau_fatigue;
