@@ -6,13 +6,74 @@
 #include "../joueur/joueur.h"
 #include "combat.h"
 
-int ActionPlayer() {
+void AttackPlayer(Plongeur *plongeur, CreatureMarine *creature){
+    printf("Attack player\n");
+    creature->life -= plongeur->attack;
+}
+
+void regenerateOxygen(){
+    printf("Recuperation Oxygene\n");
+}
+
+void DisplayInventary(){
+    printf("Ouverture inventaire\n");
+}
+
+void AttackSpecialPlayer(){
+    printf("Attack spezcial\n");
+}
+
+int choiceCreature() {
+    int choice;
+    printf("Choissiez une creature a attaquer (1-%d): ", nb_creatures);
+    scanf("%d", &choice);
+
+    while (choice < 1 || choice > nb_creatures) {
+        printf("Entree invalide!\n");
+        printf("Choissiez une creature a attaquer (1-%d): ", nb_creatures);
+        scanf("%d", &choice);
+    }
+
+    return choice-1;
+}
+
+void actionPlayer(int choice, Plongeur *plongeur) {
+    printf("choix : ");
+    scanf("%d", &choice);
+
+    switch (choice)
+    {
+    case 1:
+    int num = choiceCreature();
+        AttackPlayer(plongeur, &tabOfCreature[num]);
+        break;
+    case 2:
+        regenerateOxygen();
+        break;
+    case 3:
+        DisplayInventary();
+        break;
+    case 4:
+        AttackSpecialPlayer();
+        break;
+    default:
+        printf("Veuillez choisir un choix valide!\n");
+        system("cls");
+        initFight(plongeur);
+        break;
+    }
+}
+
+void ChoicePlayer(int choice, Plongeur *plongeur) {
+    printf("\n");
     printf("Que voulez-vous faire?\n");
     printf("1) Attaquer\n");
     printf("2) Recuperer de l'oxigene\n");
     printf("3) Utiliser son inventaire\n");
     printf("4) Attaque special\n");
-    return 0;
+    printf("\n");
+
+    actionPlayer(choice, plongeur);
 }
 
 int actionMonster() {
@@ -48,23 +109,71 @@ Entity *initInitiative(Plongeur *plongeur, int total) {
     return tabInitiative;
 }
 
+void displayCreatures() {
+    printf("\n\n========================================================\n");
+    for (int i = 0; i < nb_creatures; i++) {
+        printf("        %-20s", tabOfCreature[i].name);
+    }
+
+    printf("\n");
+
+    for (int i = 0; i < nb_creatures; i++) {
+        printf("        %d/%d PV            ", tabOfCreature[i].life, tabOfCreature[i].max_life);
+    }
+    printf("\n========================================================\n\n");
+}
+
+int playerIsAlive(Plongeur *plongeur) {
+    if (plongeur->points_de_vie == 0) {
+        printf("Vous avez perdu!!\n");
+        return 0;
+    }
+    return 1;
+}
+
+int checkCreature() {
+    if (tabOfCreature == NULL) {
+        printf("Vous avez tue tout les creature marine!\n");
+        return 0;
+    }
+    return 1;
+}
+
+void pressEnterToContinue() {
+    printf("\nAppuyez sur Entrée pour continuer...\n");
+    getchar();
+    getchar();
+}
+
 void initFight(Plongeur *plongeur) {
+    int choice = 0;
     printf("========================================================\nVous venez de lancé un combat contre %d Creature Marine\n========================================================\n", nb_creatures);
 
     int total = 1 + nb_creatures;
     Entity *initiative = initInitiative(plongeur, total);
     if (!initiative) return;
 
-    printf("Ordre d'initiative (vitesse desc.) :\n");
-    for (int i = 0; i < total; ++i) {
-        if (initiative[i].type == ENT_PLONGEUR) {
-            printf("%d) Plongeur (vitesse=%d)\n", i + 1, initiative[i].u.plongeur.vitesse);
-        } else {
-            printf("%d) Creature #%d %s (vitesse=%d)\n", i + 1,
-                   initiative[i].u.creature.id,
-                   initiative[i].u.creature.name ? initiative[i].u.creature.name : "??",
-                   initiative[i].u.creature.vitesse);
+    while (playerIsAlive(plongeur) && checkCreature()) {
+        displayCreatures();
+        for (int i = 0; i < total; i++) {
+            
+            if (initiative[i].type == ENT_CREATURE) {
+                if(initiative[i].u.creature.life == 0) continue;
+            }
+
+            if (initiative[i].type == ENT_CREATURE) {
+                printf("Tour de la creature %d : %s de vitesse : %d\n", initiative[i].u.creature.id+1, initiative[i].u.creature.name, initiative[i].u.creature.vitesse);
+                actionMonster();
+                pressEnterToContinue();
+            } else if(initiative[i].type == ENT_PLONGEUR) {
+                printf("Tour du joueur\n");
+                ChoicePlayer(choice, plongeur);
+                displayCreatures();
+            }
+
         }
+
+
     }
 
     free(initiative);
