@@ -79,7 +79,7 @@ void ChoicePlayer(int choice, Plongeur *plongeur) {
     actionPlayer(choice, plongeur);
 }
 
-int actionMonster(Plongeur *plongeur, CreatureMarine *creature) {
+int AttackCreature(Plongeur *plongeur, CreatureMarine *creature) {
     printf("La creature %s vous attaque et vous subissez %d de degats!\n", creature->name, creature->max_attack);
     return plongeur->points_de_vie -= creature->max_attack;
 }
@@ -168,7 +168,7 @@ void initFight(Plongeur *plongeur) {
 
             if (initiative[i].type == ENT_CREATURE) {
                 printf("Tour de la creature %d : %s de vitesse : %d\n", initiative[i].u.creature.id+1, initiative[i].u.creature.name, initiative[i].u.creature.vitesse);
-                actionMonster(plongeur, &initiative[i].u.creature);
+                AttackCreature(plongeur, &initiative[i].u.creature);
                 pressEnterToContinue();
             } else if(initiative[i].type == ENT_PLONGEUR) {
                 printf("Tour du joueur\n");
