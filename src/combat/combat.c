@@ -134,7 +134,7 @@ void displayCreatures() { // utiliser le poiteur initiative
 }
 
 int playerIsAlive(Plongeur *plongeur) {
-    if (plongeur->points_de_vie == 0) {
+    if (plongeur->points_de_vie <= 0) {
         printf("Vous avez perdu!!\n");
         return 0;
     }
