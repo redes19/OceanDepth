@@ -1,18 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "../creature/creature.h"
 #include "../joueur/joueur.h"
 #include "combat.h"
 
-void AttackPlayer(Plongeur *plongeur, CreatureMarine *creature){
+int AttackPlayer(Plongeur *plongeur, CreatureMarine *creature){
     printf("Attack player\n");
-    creature->life -= plongeur->attack;
-}
 
-void regenerateOxygen(){
-    printf("Recuperation Oxygene\n");
+    int dommage = plongeur->attack * (1 - creature->defense);
+
+    int finalDommage = (int)ceilf(dommage);
+
+    printf("creature life : %d - degat float : %d - degat finaux : %d", creature->life,dommage, finalDommage);
+
+    creature->life -= finalDommage;
+
+    if (creature->life <= 0) {
+        return creature->life = 0;
+    }
+
+    return creature->life;
 }
 
 void DisplayInventary(){
@@ -48,12 +58,9 @@ void actionPlayer(int choice, Plongeur *plongeur) {
         AttackPlayer(plongeur, &tabOfCreature[num]);
         break;
     case 2:
-        regenerateOxygen();
-        break;
-    case 3:
         DisplayInventary();
         break;
-    case 4:
+    case 3:
         AttackSpecialPlayer();
         break;
     default:
@@ -68,9 +75,8 @@ void ChoicePlayer(int choice, Plongeur *plongeur) {
     printf("\n");
     printf("Que voulez-vous faire?\n");
     printf("1) Attaquer\n");
-    printf("2) Recuperer de l'oxigene\n");
-    printf("3) Utiliser son inventaire\n");
-    printf("4) Attaque special\n");
+    printf("2) Utiliser son inventaire\n");
+    printf("3) Attaque special\n");
     printf("\n");
 
     actionPlayer(choice, plongeur);
