@@ -14,7 +14,7 @@ void pressEnterToContinue()
     getchar();
 }
 
-int AttackPlayer(Plongeur *plongeur, CreatureMarine *creature)
+int AttackPlayer(Plongeur *plongeur, CreatureMarine *creature) // refacto
 {
     printf("Attack player\n");
 
@@ -94,7 +94,7 @@ void ChoicePlayer(int choice, Plongeur *plongeur)
     actionPlayer(choice, plongeur);
 }
 
-int AttackCreature(Plongeur *plongeur, CreatureMarine *creature)
+int AttackCreature(Plongeur *plongeur, CreatureMarine *creature) // refacto
 {
     printf("La creature %s vous attaque et vous subissez %d de degats!\n", creature->name, creature->max_attack);
     return plongeur->points_de_vie -= creature->max_attack;
@@ -133,7 +133,7 @@ Entity *initInitiative(Plongeur *plongeur, int total)
     return tabInitiative;
 }
 
-void displayCreatures()
+void displayCreatures() // refacto
 {
     printf("\n\n========================================================\n");
     for (int i = 0; i < nb_creatures; i++)
@@ -172,12 +172,13 @@ int checkCreature()
 }
 
 // Supprime les creatures morte
-void checkLifeCreature(int total, Entity *initiative)
+void deleteInitiativeCreature(int total, Entity *initiative) // refacto
 {
     for (int i = 0; i < total; i++)
     {
         if (initiative[i].type == ENT_CREATURE)
         {
+            printf("name : %s - life : %d", initiative[i].u.creature.name, initiative[i].u.creature.life);
             if (initiative[i].u.creature.life == 0)
             {
                 for (int j = i; j < total - 1; j++)
@@ -192,7 +193,7 @@ void checkLifeCreature(int total, Entity *initiative)
 }
 
 // Supprime une creature si sa vie = 0
-void deleteCreatureInTabOfCreature()
+void deleteCreatureInTabOfCreature(int total, Entity *initiative) // refacto
 {
     for (int i = 0; i < nb_creatures; i++)
     {
@@ -209,6 +210,7 @@ void deleteCreatureInTabOfCreature()
             i--; // afin de ne pas sauté d'elements a cause du decalage
         }
     }
+    deleteInitiativeCreature(total, initiative);
     pressEnterToContinue();
 }
 
@@ -246,7 +248,7 @@ void initFight(Plongeur *plongeur)
             {
                 printf("Tour du joueur\n");
                 ChoicePlayer(choice, plongeur);
-                deleteCreatureInTabOfCreature();
+                deleteCreatureInTabOfCreature(total, initiative);
                 displayCreatures();
             }
         }
