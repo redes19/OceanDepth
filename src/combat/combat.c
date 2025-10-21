@@ -27,15 +27,15 @@ int AttackPlayer(Plongeur *plongeur, Entity *initative, int idCreature, int tota
             if (creature->life < 0)
                 creature->life = 0;
 
-            printf("→ Vous attaquez %s !\n", creature->name);
-            printf("→ Dégâts infligés : %d (défense : %.2f)\n", finalDommage, creature->defense);
-            printf("→ PV restants : %d/%d\n", creature->life, creature->max_life);
+            printf("Vous attaquez %s !\n", creature->name);
+            printf("Degats infliges : %d (défense : %.2f)\n", finalDommage, creature->defense);
+            printf("PV restants : %d/%d\n", creature->life, creature->max_life);
 
             return creature->life;
             
         }
     }
-    printf("❌ Erreur : créature avec id %d introuvable dans le tableau d’initiative.\n", idCreature);
+    printf("Erreur : créature avec id %d introuvable dans le tableau d’initiative.\n", idCreature);
     return -1;
 }
 
