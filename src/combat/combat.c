@@ -14,21 +14,29 @@ void pressEnterToContinue()
     getchar();
 }
 
-int AttackPlayer(Plongeur *plongeur, CreatureMarine *creature) // refacto
+int AttackPlayer(Plongeur *plongeur, Entity *initative, int idCreature, int total)
 {
-    printf("Attack player\n");
+    for(int i = 0; i < total; i++) {
+        if(initative[i].type == ENT_CREATURE && initative[i].u.creature.id == idCreature) {
+            CreatureMarine *creature = &initative[i].u.creature;
 
-    int dommage = plongeur->attack * (1 - creature->defense);
-    int finalDommage = (int)ceilf(dommage);
+            float dommage = plongeur->attack * (1 - creature->defense);
+            int finalDommage = (int)ceilf(dommage);
 
-    creature->life -= finalDommage;
+            creature->life -= finalDommage;
+            if (creature->life < 0)
+                creature->life = 0;
 
-    if (creature->life <= 0)
-    {
-        return creature->life = 0;
+            printf("→ Vous attaquez %s !\n", creature->name);
+            printf("→ Dégâts infligés : %d (défense : %.2f)\n", finalDommage, creature->defense);
+            printf("→ PV restants : %d/%d\n", creature->life, creature->max_life);
+
+            return creature->life;
+            
+        }
     }
-
-    return creature->life;
+    printf("❌ Erreur : créature avec id %d introuvable dans le tableau d’initiative.\n", idCreature);
+    return -1;
 }
 
 void DisplayInventary()
@@ -57,7 +65,7 @@ int choiceCreature()
     return choice - 1;
 }
 
-void actionPlayer(int choice, Plongeur *plongeur)
+void actionPlayer(int choice, Plongeur *plongeur, Entity *initative, int total)
 {
     printf("choix : ");
     scanf("%d", &choice);
@@ -65,8 +73,8 @@ void actionPlayer(int choice, Plongeur *plongeur)
     switch (choice)
     {
     case 1:
-        int num = choiceCreature();
-        AttackPlayer(plongeur, &tabOfCreature[num]);
+        int idCreature = choiceCreature();
+        AttackPlayer(plongeur, initative, idCreature, total);
         break;
     case 2:
         DisplayInventary();
@@ -82,7 +90,7 @@ void actionPlayer(int choice, Plongeur *plongeur)
     }
 }
 
-void ChoicePlayer(int choice, Plongeur *plongeur)
+void ChoicePlayer(int choice, Plongeur *plongeur, Entity *initative, int total)
 {
     printf("\n");
     printf("Que voulez-vous faire?\n");
@@ -91,7 +99,7 @@ void ChoicePlayer(int choice, Plongeur *plongeur)
     printf("3) Attaque special\n");
     printf("\n");
 
-    actionPlayer(choice, plongeur);
+    actionPlayer(choice, plongeur, initative, total);
 }
 
 int AttackCreature(Plongeur *plongeur, CreatureMarine *creature) // refacto
@@ -135,7 +143,7 @@ Entity *initInitiative(Plongeur *plongeur, int total)
 
 void displayCreatures(Entity *initiative, int total)
 {
-    printf("\n\n========================================================\n");
+    printf("\n\n==============================================================\n");
     for (int i = 0; i < total; i++)
     {
         if (initiative[i].type == ENT_CREATURE) {
@@ -151,7 +159,7 @@ void displayCreatures(Entity *initiative, int total)
             printf("                 %d/%d PV            ", initiative[i].u.creature.life, initiative[i].u.creature.max_life);
         }
     }
-    printf("\n========================================================\n\n");
+    printf("\n==============================================================\n\n");
 }
 
 int playerIsAlive(Plongeur *plongeur)
@@ -251,7 +259,7 @@ void initFight(Plongeur *plongeur)
             else if (initiative[i].type == ENT_PLONGEUR)
             {
                 printf("Tour du joueur\n");
-                ChoicePlayer(choice, plongeur);
+                ChoicePlayer(choice, plongeur, initiative, total);
                 deleteCreatureInTabOfCreature(total, initiative);
                 displayCreatures(initiative, total);
             }
