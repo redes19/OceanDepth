@@ -163,7 +163,7 @@ int playerIsAlive(Plongeur *plongeur)
 // Verifie s'il reste des creatures a combattre
 int checkCreature()
 {
-    if (tabOfCreature == NULL)
+    if (nb_creatures == 0)
     {
         printf("Vous avez tue tout les creature marine!\n");
         return 0;
@@ -186,7 +186,6 @@ void checkLifeCreature(int total, Entity *initiative)
                 }
                 total--;
                 i--;
-                deleteCreatureInTabOfCreature(total, initiative);
             }
         }
     }
@@ -215,7 +214,7 @@ void deleteCreatureInTabOfCreature()
 
 void initFight(Plongeur *plongeur)
 {
-    plongeur->attack = 50;
+    plongeur->attack = 100;
     int choice = 0;
     printf("========================================================\nVous venez de lancé un combat contre %d Creature Marine\n========================================================\n", nb_creatures);
 
@@ -253,5 +252,6 @@ void initFight(Plongeur *plongeur)
         }
     }
 
+    printf("Fin du combat!\n");
     free(initiative);
 }
