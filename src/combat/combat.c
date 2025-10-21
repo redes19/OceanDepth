@@ -133,19 +133,23 @@ Entity *initInitiative(Plongeur *plongeur, int total)
     return tabInitiative;
 }
 
-void displayCreatures() // refacto
+void displayCreatures(Entity *initiative, int total)
 {
     printf("\n\n========================================================\n");
-    for (int i = 0; i < nb_creatures; i++)
+    for (int i = 0; i < total; i++)
     {
-        printf("        %-20s", tabOfCreature[i].name);
+        if (initiative[i].type == ENT_CREATURE) {
+            printf("        id : %d - %-20s",  initiative[i].u.creature.id+1, initiative[i].u.creature.name);
+        }
     }
 
     printf("\n");
 
-    for (int i = 0; i < nb_creatures; i++)
+    for (int i = 0; i < total; i++)
     {
-        printf("        %d/%d PV            ", tabOfCreature[i].life, tabOfCreature[i].max_life);
+        if (initiative[i].type == ENT_CREATURE) {
+            printf("                 %d/%d PV            ", initiative[i].u.creature.life, initiative[i].u.creature.max_life);
+        }
     }
     printf("\n========================================================\n\n");
 }
@@ -227,7 +231,7 @@ void initFight(Plongeur *plongeur)
 
     while (playerIsAlive(plongeur) && checkCreature())
     {
-        displayCreatures();
+        displayCreatures(initiative, total);
         printPlongeur(plongeur);
         for (int i = 0; i < total; i++)
         {
@@ -249,7 +253,7 @@ void initFight(Plongeur *plongeur)
                 printf("Tour du joueur\n");
                 ChoicePlayer(choice, plongeur);
                 deleteCreatureInTabOfCreature(total, initiative);
-                displayCreatures();
+                displayCreatures(initiative, total);
             }
         }
     }
