@@ -165,9 +165,9 @@ int playerIsAlive(Plongeur *plongeur)
 }
 
 // Verifie s'il reste des creatures a combattre
-int checkCreature()
+int checkCreature(int total)
 {
-    if (nb_creatures == 0)
+    if (total == 1)
     {
         printf("Vous avez tue tout les creature marine!\n");
         return 0;
@@ -229,7 +229,7 @@ void initFight(Plongeur *plongeur)
     if (!initiative)
         return;
 
-    while (playerIsAlive(plongeur) && checkCreature())
+    while (playerIsAlive(plongeur) && checkCreature(total))
     {
         displayCreatures(initiative, total);
         printPlongeur(plongeur);
