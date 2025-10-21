@@ -44,7 +44,7 @@ void AttackSpecialPlayer()
 int choiceCreature()
 {
     int choice;
-    printf("Choissiez une creature a attaquer (1-%d): ", nb_creatures);
+    printf("Choissiez une creature a attaquer (1 a %d): ", nb_creatures);
     scanf("%d", &choice);
 
     while (choice < 1 || choice > nb_creatures)
@@ -200,13 +200,13 @@ void deleteCreatureInTabInitiative(int total, Entity *initiative)
 // Supprime une creature si sa vie = 0
 void checkLifeCreature(int total, Entity *initiative)
 {
-    printf("\n========================================================\n\n");
-    printf("\nVous avez elimine une creature!!\n");
-    printf("\n========================================================\n\n");
     for (int i = 0; i < nb_creatures; i++)
     {
         if (tabOfCreature[i].life == 0)
         {
+            printf("\n========================================================\n\n");
+            printf("\nVous avez elimine une creature!!\n");
+            printf("\n========================================================\n\n");
             for (int j = i; j < nb_creatures - 1; j++)
             {
                 tabOfCreature[j] = tabOfCreature[j + 1];
