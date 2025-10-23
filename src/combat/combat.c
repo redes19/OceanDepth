@@ -18,9 +18,9 @@ int AttackPlayer(Plongeur *plongeur, Entity *initative, int idCreature, int tota
 {
     for (int i = 0; i < total; i++)
     {
-        if (initative[i].type == ENT_CREATURE && initative[i].u.creature.id == idCreature)
+        if (initative[i].type == ENT_CREATURE && initative[i].u.creature->id == idCreature)
         {
-            CreatureMarine *creature = &initative[i].u.creature;
+            CreatureMarine *creature = initative[i].u.creature;
 
             float dommage = plongeur->attack * (1 - creature->defense);
             int finalDommage = (int)ceilf(dommage);
@@ -53,17 +53,18 @@ void AttackSpecialPlayer()
 int choiceCreature()
 {
     int choice;
-    printf("Choissiez une creature a attaquer (1 a %d): ", nb_creatures);
+    printf("Choissiez une creature a attaquer (choissisez son id): ");
     scanf("%d", &choice);
 
-    while (choice < 1 || choice > nb_creatures)
-    {
-        printf("Entree invalide!\n");
-        printf("Choissiez une creature a attaquer (1-%d): ", nb_creatures);
-        scanf("%d", &choice);
+    for(int i = 0; i < nb_creatures; i++) {
+        if(choice != tabOfCreature[i].id) {
+            continue;
+        } else {
+            return choice - 1;
+        }
     }
 
-    return choice - 1;
+    return 0;
 }
 
 void actionPlayer(int choice, Plongeur *plongeur, Entity *initative, int total)
@@ -114,8 +115,8 @@ int cmp(const void *a, const void *b)
     const Entity *ea = a;
     const Entity *eb = b;
 
-    int v1 = (ea->type == ENT_PLONGEUR) ? ea->u.plongeur.vitesse : ea->u.creature.vitesse;
-    int v2 = (eb->type == ENT_PLONGEUR) ? eb->u.plongeur.vitesse : eb->u.creature.vitesse;
+    int v1 = (ea->type == ENT_PLONGEUR) ? ea->u.plongeur.vitesse : ea->u.creature->vitesse;
+    int v2 = (eb->type == ENT_PLONGEUR) ? eb->u.plongeur.vitesse : eb->u.creature->vitesse;
     return v2 - v1;
 }
 
@@ -134,7 +135,7 @@ Entity *initInitiative(Plongeur *plongeur, int total)
     for (int i = 0; i < nb_creatures; i++)
     {
         tabInitiative[i + 1].type = ENT_CREATURE;
-        tabInitiative[i + 1].u.creature = tabOfCreature[i];
+        tabInitiative[i + 1].u.creature = &tabOfCreature[i];
     }
 
     qsort(tabInitiative, total, sizeof(Entity), cmp);
@@ -144,12 +145,12 @@ Entity *initInitiative(Plongeur *plongeur, int total)
 
 void displayCreatures(Entity *initiative, int total)
 {
-    printf("\n\n==============================================================\n");
+    printf("\n\n==========================================================================\n");
     for (int i = 0; i < total; i++)
     {
         if (initiative[i].type == ENT_CREATURE)
         {
-            printf("        id : %d - %-20s", initiative[i].u.creature.id + 1, initiative[i].u.creature.name);
+            printf("        id : %d - %-20s", initiative[i].u.creature->life + 1, initiative[i].u.creature->name);
         }
     }
 
@@ -159,10 +160,10 @@ void displayCreatures(Entity *initiative, int total)
     {
         if (initiative[i].type == ENT_CREATURE)
         {
-            printf("                 %d/%d PV            ", initiative[i].u.creature.life, initiative[i].u.creature.max_life);
+            printf("                 %d/%d PV            ", initiative[i].u.creature->life, initiative[i].u.creature->max_life);
         }
     }
-    printf("\n==============================================================\n\n");
+    printf("\n==========================================================================\n\n");
 }
 
 int playerIsAlive(Plongeur *plongeur)
@@ -210,15 +211,15 @@ int deleteInitiativeCreature(int total, Entity *initiative) // refacto
     {
         if (initiative[i].type == ENT_CREATURE)
         {
-            if (initiative[i].u.creature.life <= 0)
+            if (initiative[i].u.creature->life <= 0)
             {
                 printf("\n========================================================\n\n");
-                printf("\nVous avez elimine la creature %s!!\n", initiative[i].u.creature.name);
+                printf("\nVous avez elimine la creature %s!!\n", initiative[i].u.creature->name);
                 printf("\n========================================================\n\n");
 
                 for (int k = 0; k < nb_creatures; k++)
                 {
-                    if (tabOfCreature[k].id == initiative[i].u.creature.id)
+                    if (tabOfCreature[k].id == initiative[i].u.creature->id)
                     {
                         tabOfCreature[k].life = 0;
                     }
@@ -260,21 +261,22 @@ void initFight(Plongeur *plongeur)
 
             if (initiative[i].type == ENT_CREATURE)
             {
-                if (initiative[i].u.creature.life == 0)
+                if (initiative[i].u.creature->life == 0)
                     continue;
             }
 
             if (initiative[i].type == ENT_CREATURE)
             {
-                printf("Tour de la creature %d : %s de vitesse : %d\n", initiative[i].u.creature.id + 1, initiative[i].u.creature.name, initiative[i].u.creature.vitesse);
-                AttackCreature(plongeur, &initiative[i].u.creature);
+                printf("Tour de la creature %d : %s de vitesse : %d\n", initiative[i].u.creature->id + 1, initiative[i].u.creature->name, initiative[i].u.creature->vitesse);
+                AttackCreature(plongeur, initiative[i].u.creature);
                 pressEnterToContinue();
             }
             else if (initiative[i].type == ENT_PLONGEUR)
             {
                 printf("Tour du joueur\n");
                 ChoicePlayer(choice, plongeur, initiative, total);
-                deleteInitiativeCreature(total, initiative);
+                total = deleteInitiativeCreature(total, initiative);
+                initiative = realloc(initiative, sizeof(Entity) * total);
                 displayCreatures(initiative, total);
             }
         }

@@ -13,7 +13,7 @@ typedef struct {
     EntityType type;
     union {
         Plongeur plongeur;
-        CreatureMarine creature;
+        CreatureMarine *creature;
     } u;
 } Entity;
 
