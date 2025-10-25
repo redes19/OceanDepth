@@ -14,9 +14,12 @@ void pressEnterToContinue()
     getchar();
 }
 
-static CreatureMarine *findCreatureById(int id) {
-    for (int i = 0; i < nb_creatures; i++) {
-        if (tabOfCreature[i].id == id) {
+static CreatureMarine *findCreatureById(int id)
+{
+    for (int i = 0; i < nb_creatures; i++)
+    {
+        if (tabOfCreature[i].id == id)
+        {
             return &tabOfCreature[i];
         }
     }
@@ -26,7 +29,8 @@ static CreatureMarine *findCreatureById(int id) {
 int AttackPlayer(Plongeur *plongeur, int idCreature)
 {
     CreatureMarine *creature = findCreatureById(idCreature);
-    if (!creature) {
+    if (!creature)
+    {
         printf("Erreur : créature avec id %d introuvable.\n", idCreature);
         return -1;
     }
@@ -34,11 +38,13 @@ int AttackPlayer(Plongeur *plongeur, int idCreature)
     float dommage = plongeur->attack * (1 - creature->defense);
     int dommageFinal = (int)ceilf(dommage);
 
-    if (creature->life - dommageFinal <= 0) {
+    if (creature->life - dommageFinal <= 0)
+    {
         creature->life = 0;
     }
 
-    printf("Erreur : créature avec id %d introuvable dans le tableau d’initiative.\n", idCreature);
+    printf("Vous attaquer %s id : %d id - choice : %d\n", creature->name, creature->id, idCreature);
+
     return creature->life -= dommageFinal;
 }
 
@@ -58,11 +64,16 @@ int choiceCreature()
     printf("Choissiez une creature a attaquer (choissisez son id): ");
     scanf("%d", &choice);
 
-    for(int i = 0; i < nb_creatures; i++) {
-        if(choice != tabOfCreature[i].id) {
-            continue;
-        } else {
-            return choice - 1;
+    for (int i = 0; i < nb_creatures; i++)
+    {
+        if (choice != tabOfCreature[i].id)
+        {
+            printf("Choissiez une créature encore vivante!!\n");
+            choiceCreature();
+        }
+        else
+        {
+            return choice;
         }
     }
 
@@ -119,16 +130,22 @@ int cmp(const void *a, const void *b)
 
     int v1 = 0, v2 = 0;
 
-    if (ea->type == ENT_PLONGEUR) {
+    if (ea->type == ENT_PLONGEUR)
+    {
         v1 = ea->u.plongeur.vitesse;
-    } else {
+    }
+    else
+    {
         CreatureMarine *creature = findCreatureById(ea->u.creature_id);
         v2 = creature ? creature->vitesse : 0;
     }
 
-    if (eb->type == ENT_PLONGEUR) {
+    if (eb->type == ENT_PLONGEUR)
+    {
         v1 = eb->u.plongeur.vitesse;
-    } else {
+    }
+    else
+    {
         CreatureMarine *creature = findCreatureById(eb->u.creature_id);
         v2 = creature ? creature->vitesse : 0;
     }
@@ -167,7 +184,7 @@ void displayCreatures(Entity *initiative, int total)
         if (initiative[i].type == ENT_CREATURE)
         {
             CreatureMarine *c = findCreatureById(initiative[i].u.creature_id);
-            printf("        id : %d - %-20s", c->life + 1, c->name);
+            printf("        id : %d - %-20s", c->id, c->name);
         }
     }
 
@@ -272,7 +289,6 @@ void initFight(Plongeur *plongeur)
 
     while (playerIsAlive(plongeur) && checkCreature(total))
     {
-        printf("\n%d\n", total);
         displayCreatures(initiative, total);
         printPlongeur(plongeur);
         for (int i = 0; i < total; i++)
