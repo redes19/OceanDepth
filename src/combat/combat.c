@@ -43,7 +43,8 @@ int AttackPlayer(Plongeur *plongeur, int idCreature)
         creature->life = 0;
     }
 
-    printf("Vous attaquer %s id : %d id - choice : %d\n", creature->name, creature->id, idCreature);
+    plongeur->niveau_fatigue += 1;
+    plongeur->niveau_oxygene -= 2;
 
     return creature->life -= dommageFinal;
 }
@@ -53,9 +54,17 @@ void DisplayInventary()
     printf("Ouverture inventaire\n");
 }
 
-void AttackSpecialPlayer()
+void AttackSpecialPlayer(Plongeur *plongeur)
 {
     printf("Attack spezcial\n");
+    plongeur->niveau_fatigue += 3;
+}
+
+void DiminutionFatigue(Plongeur *plongeur) {
+    printf("Vous recuperez de l energie\n");
+    if(plongeur->niveau_fatigue > 0) {
+        plongeur->niveau_fatigue--;
+    }
 }
 
 int choiceCreature()
@@ -88,14 +97,21 @@ void actionPlayer(int choice, Plongeur *plongeur)
     switch (choice)
     {
     case 1:
-        int idCreature = choiceCreature();
-        AttackPlayer(plongeur, idCreature);
+        if(plongeur->niveau_fatigue == 5) {
+            printf("Vous avez trop de fatigue pour attaquer!\n");
+            actionPlayer(choice, plongeur);
+        } else {
+            AttackPlayer(plongeur, choiceCreature());
+        }
         break;
     case 2:
         DisplayInventary();
         break;
     case 3:
-        AttackSpecialPlayer();
+        AttackSpecialPlayer(plongeur);
+        break;
+    case 4 : 
+        DiminutionFatigue(plongeur);
         break;
     default:
         printf("Veuillez choisir un choix valide!\n");
@@ -117,9 +133,11 @@ void ChoicePlayer(int choice, Plongeur *plongeur)
     actionPlayer(choice, plongeur);
 }
 
-int AttackCreature(Plongeur *plongeur, CreatureMarine *creature) // refacto
+int AttackCreature(Plongeur *plongeur, CreatureMarine *creature) 
 {
-    printf("La creature %s vous attaque et vous subissez %d de degats!\n", creature->name, creature->max_attack);
+    printf("La creature %s vous attaque et vous subissez %d de degats!\nVous perdez aussi de l'oxygene a cause du stress de l'attaque", creature->name, creature->max_attack);
+    plongeur->niveau_oxygene--;
+
     return plongeur->points_de_vie -= creature->max_attack;
 }
 
@@ -223,7 +241,7 @@ int checkCreature(int total)
 }
 
 // Supprime une creature si sa vie = 0
-void deleteCreatureInTabOfCreature() // refacto
+void deleteCreatureInTabOfCreature()
 {
     for (int i = 0; i < nb_creatures; i++)
     {
@@ -240,7 +258,7 @@ void deleteCreatureInTabOfCreature() // refacto
 }
 
 // Supprime les creatures morte
-int deleteInitiativeCreature(int total, Entity *initiative) // refacto
+int deleteInitiativeCreature(int total, Entity *initiative)
 {
     for (int i = 0; i < total; i++)
     {
@@ -316,6 +334,7 @@ void initFight(Plongeur *plongeur)
                 displayCreatures(initiative, total);
             }
         }
+        printf("\033[2J\033[1;1H");
     }
 
     printf("Fin du combat!\n");
