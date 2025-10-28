@@ -26,7 +26,7 @@ static CreatureMarine *findCreatureById(int id)
     return NULL;
 }
 
-int AttackPlayer(Plongeur *plongeur, int idCreature)
+int AttackPlayer(Plongeur *plongeur, int idCreature, int depth)
 {
     CreatureMarine *creature = findCreatureById(idCreature);
     if (!creature)
@@ -43,15 +43,16 @@ int AttackPlayer(Plongeur *plongeur, int idCreature)
         creature->life = 0;
     }
 
-    plongeur->niveau_fatigue += 1;
-    plongeur->niveau_oxygene -= 2;
+    plongeur->niveau_fatigue++;
+    plongeur->niveau_oxygene -= depth;
 
     return creature->life -= dommageFinal;
 }
 
-void DisplayInventary()
+void DisplayInventary(Plongeur *plongeur)
 {
     printf("Ouverture inventaire\n");
+    plongeur->niveau_fatigue += 2;
 }
 
 void AttackSpecialPlayer(Plongeur *plongeur)
@@ -60,10 +61,13 @@ void AttackSpecialPlayer(Plongeur *plongeur)
     plongeur->niveau_fatigue += 3;
 }
 
-void DiminutionFatigue(Plongeur *plongeur) {
+void DiminutionFatigue(Plongeur *plongeur, int choice, int dept) {
     printf("Vous recuperez de l energie\n");
     if(plongeur->niveau_fatigue > 0) {
         plongeur->niveau_fatigue--;
+    } else {
+        printf("Vous avez aucune fatigue\n");
+        actionPlayer(plongeur, choice, dept);
     }
 }
 
@@ -89,7 +93,7 @@ int choiceCreature()
     return 0;
 }
 
-void actionPlayer(int choice, Plongeur *plongeur)
+void actionPlayer(Plongeur *plongeur, int choice, int depth)
 {
     printf("choix : ");
     scanf("%d", &choice);
@@ -99,38 +103,44 @@ void actionPlayer(int choice, Plongeur *plongeur)
     case 1:
         if(plongeur->niveau_fatigue == 5) {
             printf("Vous avez trop de fatigue pour attaquer!\n");
-            actionPlayer(choice, plongeur);
+            actionPlayer(choice, plongeur, depth);
         } else {
-            AttackPlayer(plongeur, choiceCreature());
+            AttackPlayer(plongeur, choiceCreature(), depth);
         }
         break;
     case 2:
-        DisplayInventary();
+        DisplayInventary(plongeur);
         break;
     case 3:
         AttackSpecialPlayer(plongeur);
         break;
     case 4 : 
-        DiminutionFatigue(plongeur);
+        DiminutionFatigue(plongeur, choice, depth);
+        // Mettre fin du tour du player!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        break;
+    case 5 :
+        // utiliser var fatigue + initiative du joueur d'arreter son tour!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         break;
     default:
         printf("Veuillez choisir un choix valide!\n");
-        system("cls");
-        initFight(plongeur);
+        printf("\033[2J\033[1;1H");
+        initFight(plongeur, depth);
         break;
     }
 }
 
-void ChoicePlayer(int choice, Plongeur *plongeur)
+void ChoicePlayer(int choice, Plongeur *plongeur, int depth)
 {
     printf("\n");
     printf("Que voulez-vous faire?\n");
     printf("1) Attaquer\n");
     printf("2) Utiliser son inventaire\n");
     printf("3) Attaque special\n");
+    printf("4) Diminuez votre fatigue\n");
+    printf("5) Mettre fin a votre tour\n");
     printf("\n");
 
-    actionPlayer(choice, plongeur);
+    actionPlayer(choice, plongeur, depth);
 }
 
 int AttackCreature(Plongeur *plongeur, CreatureMarine *creature) 
@@ -294,7 +304,7 @@ int deleteInitiativeCreature(int total, Entity *initiative)
     return total;
 }
 
-void initFight(Plongeur *plongeur)
+void initFight(Plongeur *plongeur, int depth)
 {
     plongeur->attack = 100;
     int choice = 0;
@@ -327,16 +337,33 @@ void initFight(Plongeur *plongeur)
             }
             else if (initiative[i].type == ENT_PLONGEUR)
             {
-                printf("Tour du joueur\n");
-                ChoicePlayer(choice, plongeur);
-                total = deleteInitiativeCreature(total, initiative);
-                initiative = realloc(initiative, sizeof(Entity) * total);
-                displayCreatures(initiative, total);
+                int fatigue = plongeur->niveau_fatigue; // créer un pointeur!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                while (fatigue > 5) {
+                    printf("Tour du joueur\n");
+                    ChoicePlayer(choice, plongeur, depth);
+                    total = deleteInitiativeCreature(total, initiative);
+                    initiative = realloc(initiative, sizeof(Entity) * total);
+                    displayCreatures(initiative, total);
+                    // Vérifier Oxygène!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                }
+                if(plongeur->niveau_fatigue > 0) {
+                    plongeur->niveau_fatigue--;
+                }
             }
         }
+        // trouver alternative pour linux/mac
         printf("\033[2J\033[1;1H");
     }
 
     printf("Fin du combat!\n");
     free(initiative);
 }
+
+// Ordre des actions par tour
+// Initiative d'attaque selon vitesse
+// Vérification a faire su le player ordre : 
+//          Actions du joueur jusqu'à épuisement fatigue
+//          Consommation oxygène automatique (-2 à -5 selon profondeur)
+//          Vérification critique : si oxygène ≤ 10, alerte obligatoire
+//          Récupération fatigue (+1 niveau)
+// Vérification fin : victoire, défaite ou continuation

@@ -18,6 +18,6 @@ typedef struct {
 } Entity;
 
 
-void initFight(Plongeur *plongeur);
+void initFight(Plongeur *plongeur, int depth);
 
 #endif // COMBAT_H

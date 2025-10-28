@@ -49,7 +49,7 @@ int main()
 
             generateCreatureInTab(2, depth);
 
-            initFight(joueur);
+            initFight(joueur, depth);
 
             cleanupAllCreatures();
             free(choix);
