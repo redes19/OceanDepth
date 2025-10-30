@@ -351,8 +351,6 @@ int deleteInitiativeCreature(int total, Entity *initiative)
 void initFight(Plongeur *plongeur, int depth)
 {
     clearScreen();
-    // plongeur->attack = 100;
-    plongeur->points_de_vie = 300;
     int choice = 0;
     printf("========================================================\nVous venez de lancé un combat contre %d Creature Marine\n========================================================\n", nb_creatures);
 
