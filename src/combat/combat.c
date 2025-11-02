@@ -37,6 +37,7 @@ int depthLvl(int depth) {
     } else if( depth < 300) {
         return 3;
     }
+    return 4;
 }
 
 int AttackPlayer(Plongeur *plongeur, int idCreature, int depth)
@@ -274,11 +275,16 @@ int playerIsAlive(Plongeur *plongeur)
     return 1;
 }
 
-void checkO2Plongeur(Plongeur *plongeur) { // pas fini !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+void checkO2Plongeur(Plongeur *plongeur) { 
     if (plongeur->niveau_oxygene <= 10) {
         printf("\n=============================================\n|                                           |");
         printf("\n|ATTENTION VOUS AVEZ PLUS BEAUCOUP D OXYGNE |\n");
         printf("|                                           |\n=============================================");
+    }
+
+    if(plongeur->niveau_oxygene <= 0) {
+        plongeur->points_de_vie -= 5;
+        printf("Vous n'avez plus d'oxygèn vous perdez 5 points de vie!\n");
     }
 }
 
