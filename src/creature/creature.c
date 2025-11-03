@@ -130,6 +130,7 @@ CreatureMarine *createCreature(int depth) {
     creatureMarine->max_life = rand() % (35 - 25 + 1) + 25;
     creatureMarine->defense = 0;
     creatureMarine->max_attack = rand() % (12 - 8 + 1) + 8;
+    creatureMarine->min_attack = creatureMarine->max_attack;
     creatureMarine->vitesse = 1;
 
     // fonction pour ajouter des stats aux créatures

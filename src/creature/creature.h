@@ -1,9 +1,8 @@
+#include <joueur.h>
 #ifndef CREATURE_H
 #define CREATURE_H
 
-typedef struct EffectMonster {
-    // code
-} EffectMonster;
+typedef void(*EffectSpeCreature) (struct CreatureMarine *creatureMarine, void *target);
 
 typedef struct CreatureMarine {
     int id;
@@ -14,11 +13,17 @@ typedef struct CreatureMarine {
     int max_attack;
     float defense; // la défense est un pourcentage qui réduira les dégats du joueur
     int vitesse;
-    EffectMonster effect;
+    char effect[20];
     int is_alive;
-    // pourrai ajouter echec/reussite critique
+    EffectSpeCreature attackSpeCreature;
 
 } CreatureMarine;
+
+typedef enum {
+    POISONED,
+    PARALYSED,
+} Effect;
+
 
 // Déclarations des variables globales
 extern CreatureMarine *tabOfCreature;
