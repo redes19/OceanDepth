@@ -1,4 +1,3 @@
-#include <joueur.h>
 #ifndef CREATURE_H
 #define CREATURE_H
 
