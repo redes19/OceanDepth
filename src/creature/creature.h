@@ -22,7 +22,7 @@ typedef struct CreatureMarine {
     int vitesse;
     Effect effect;
     int is_alive;
-    EffectSpeCreature attackSpeCreature;
+    EffectSpeCreature effectCreature;
 
 } CreatureMarine;
 

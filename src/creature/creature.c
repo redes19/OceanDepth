@@ -66,15 +66,15 @@ void addStatsCreature(CreatureMarine *creatureMarine) {
             } else if (strcmp(prefixes[i], "Nero") == 0 || strcmp(prefixes[i], "Mara") == 0 ) {
                 creatureMarine->vitesse += rand() % (2 - 1 + 1) + 1;
             } else if(strcmp(prefixes[i], "Nero") == 0 || strcmp(prefixes[i], "Medu") == 0) {
-                creatureMarine->attackSpeCreature = poisonBite;
+                creatureMarine->effectCreature = poisonBite;
             } else if(strcmp(prefixes[i], "Mara") == 0) {
-                creatureMarine->effect == frenesieSanguinaire;
+                creatureMarine->effectCreature = frenesieSanguinaire;
             } else if(strcmp(prefixes[i], "Cora") == 0) {
-                creatureMarine->effect == carapace;
-            } else if(strcpm(prefixes[i], "Aqua") == 0) {
-                creatureMarine->effect == confusion;
+                creatureMarine->effectCreature = carapace;
+            } else if(strcmp(prefixes[i], "Aqua") == 0) {
+                creatureMarine->effectCreature = confusion;
             } else if(strcmp(prefixes[i], "Thalo") == 0) {
-                creatureMarine->effect == chargePerforante;
+                creatureMarine->effectCreature = chargePerforante;
             }
         }
     }
