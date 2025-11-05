@@ -2,6 +2,7 @@
 #define JOUEUR_H
 
 #include "../carte/carte.h"
+#include "../creature/creature.h"
 
 
 typedef struct Plongeur {
@@ -9,11 +10,12 @@ typedef struct Plongeur {
     int points_de_vie_max;
     int attack;
     int vitesse;
+    float defense;
     int niveau_oxygene;
     int niveau_oxygene_max;
     int niveau_fatigue;
     int perles;
-    char effet;
+    Effect effect;
 
     Zone zone;
 } Plongeur;

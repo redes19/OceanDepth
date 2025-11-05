@@ -184,7 +184,10 @@ int AttackCreature(Plongeur *plongeur, CreatureMarine *creature)
     printf("La creature %s vous attaque et vous subissez %d de degats!\nVous perdez aussi de l'oxygene a cause du stress de l'attaque\n\n", creature->name, creature->max_attack);
     plongeur->niveau_oxygene -= 5;
 
-    return plongeur->points_de_vie -= creature->max_attack;
+    float damage = creature->max_attack * (1 - plongeur->defense);
+    int dommageFinal = (int)ceilf(damage);
+
+    return plongeur->points_de_vie -= dommageFinal;
 }
 
 int cmp(const void *a, const void *b)
@@ -371,14 +374,7 @@ void initFight(Plongeur *plongeur, int depth)
         printPlongeur(plongeur);
         for (int i = 0; i < total; i++)
         {
-            printf("o2 : %d", plongeur->niveau_oxygene);
             CreatureMarine *c = findCreatureById(initiative[i].u.creature_id);
-
-            if (initiative[i].type == ENT_CREATURE)
-            {
-                if (c->life == 0)
-                    continue;
-            }
 
             if (initiative[i].type == ENT_CREATURE)
             {
@@ -394,7 +390,6 @@ void initFight(Plongeur *plongeur, int depth)
                     total = deleteInitiativeCreature(total, initiative);
                     initiative = realloc(initiative, sizeof(Entity) * total);
                     checkO2Plongeur(plongeur);
-                    displayCreatures(initiative, total);
                 }
                 if(plongeur->niveau_fatigue > 0) {
                     plongeur->niveau_fatigue--;

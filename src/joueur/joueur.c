@@ -9,6 +9,7 @@ Plongeur *initializePlongeur(Zone zone) {
     plongeur->points_de_vie_max = 100;
     plongeur->attack = 20;
     plongeur->vitesse = 2;
+    plongeur->defense = (rand() % 7 + 1) / 100.0f;
     plongeur->niveau_oxygene = 100;
     plongeur->niveau_oxygene_max = 100;
     plongeur->niveau_fatigue = 0;

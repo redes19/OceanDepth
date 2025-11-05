@@ -1,7 +1,15 @@
 #ifndef CREATURE_H
 #define CREATURE_H
 
+struct CreatureMarine;
 typedef void(*EffectSpeCreature) (struct CreatureMarine *creatureMarine, void *target);
+
+typedef enum {
+    POISONED, // Retire 10PV 
+    PARALYSED, // Saut le tour
+    PROTECTED, // Réduit de 20% les dégats
+    REDUCEDDAMAGE, // Réduction des dégats
+} Effect;
 
 typedef struct CreatureMarine {
     int id;
@@ -12,16 +20,18 @@ typedef struct CreatureMarine {
     int max_attack;
     float defense; // la défense est un pourcentage qui réduira les dégats du joueur
     int vitesse;
-    char effect[20];
+    Effect effect;
     int is_alive;
     EffectSpeCreature attackSpeCreature;
 
 } CreatureMarine;
 
-typedef enum {
-    POISONED,
-    PARALYSED,
-} Effect;
+// Effect Spécials
+void poisonBite(CreatureMarine *creatureMarine, void *target);
+void frenesieSanguinaire(CreatureMarine *creatureMarine, void *target);
+void carapace(CreatureMarine *creature, void *target);
+void chargePerforante(CreatureMarine *creature, void *target);
+void confusion(CreatureMarine *creature, void *target);
 
 
 // Déclarations des variables globales

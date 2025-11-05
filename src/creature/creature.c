@@ -5,6 +5,7 @@
 
 #include "creature.h"
 
+
 CreatureMarine *tabOfCreature = NULL;
 int nb_creatures = 0;
 static int random_initialized = 0;
@@ -59,14 +60,21 @@ void addStatsCreature(CreatureMarine *creatureMarine) {
     for (int i = 0; i < nbrPrefixes; i++) {
         if (strncmp(creatureMarine->name, prefixes[i], strlen(prefixes[i])) == 0) {
             if(strcmp(prefixes[i], "Medu") == 0 || strcmp(prefixes[i], "Cora") == 0 || strcmp(prefixes[i], "Thalo") == 0 ) {
-                // printf("Life\n");
                 creatureMarine->max_life += rand() % (30 - 15 + 1) + 15;
             } else if (strcmp(prefixes[i], "Aqua") == 0 || strcmp(prefixes[i], "Hydro") == 0 ) {
-                // printf("Attack\n");
                 creatureMarine->max_attack += rand() % (20 - 5 + 1) + 5;
             } else if (strcmp(prefixes[i], "Nero") == 0 || strcmp(prefixes[i], "Mara") == 0 ) {
-                // printf("Speed\n");
                 creatureMarine->vitesse += rand() % (2 - 1 + 1) + 1;
+            } else if(strcmp(prefixes[i], "Nero") == 0 || strcmp(prefixes[i], "Medu") == 0) {
+                creatureMarine->attackSpeCreature = poisonBite;
+            } else if(strcmp(prefixes[i], "Mara") == 0) {
+                creatureMarine->effect == frenesieSanguinaire;
+            } else if(strcmp(prefixes[i], "Cora") == 0) {
+                creatureMarine->effect == carapace;
+            } else if(strcpm(prefixes[i], "Aqua") == 0) {
+                creatureMarine->effect == confusion;
+            } else if(strcmp(prefixes[i], "Thalo") == 0) {
+                creatureMarine->effect == chargePerforante;
             }
         }
     }
@@ -78,17 +86,11 @@ void addStatsCreature(CreatureMarine *creatureMarine) {
     for (int i = 0; i < nbrSuffixes; i++) {
         if(strcmp(creatureMarine->name + indexSufixe, suffixes[i]) == 0) {
             if (strcmp(suffixes[i], "os") == 0 || strcmp(suffixes[i], "mi") == 0) {
-                // printf("Vitess\n");
                 creatureMarine->vitesse += rand() % (2 - 1 + 1) + 1;
             } else if (strcmp(suffixes[i], "ra") == 0 || strcmp(suffixes[i], "th") == 0) {
-                // printf("Dfense\n");
                 creatureMarine->defense += (rand() % 21 + 10) / 100.0f;
             } else if (strcmp(suffixes[i], "os") == 0) {
-                // printf("attack\n");
                 creatureMarine->max_attack += rand() % (15 - 5 + 1) + 5;
-            } else if (strcmp(suffixes[i], "on") == 0 || strcmp(suffixes[i], "te") == 0) {
-                // printf("Effect\n");
-                // add effect
             }
         }
     }
