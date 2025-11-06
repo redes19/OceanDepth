@@ -8,8 +8,6 @@
 #include "combat.h"
 #include "../clear/clear.h"
 
-int is_poisoned = 0;
-int is_paralysed = 1;
 
 void actionPlayer(Plongeur *plongeur, int choice, int depth);
 
@@ -60,7 +58,7 @@ int AttackPlayer(Plongeur *plongeur, int idCreature, int depth)
         creature->life = 0;
     }
 
-    plongeur->niveau_fatigue += 5;
+    plongeur->niveau_fatigue++;
     plongeur->niveau_oxygene -= depthLvl(depth);
 
     return creature->life -= dommageFinal;
@@ -311,31 +309,35 @@ int checkEffectPlongeur(Plongeur *plongeur) {
     switch (plongeur->effect)
     {
     case POISONED:
-        if (is_poisoned > 2) {
-            poisonedEffect();
+        if (is_poisoned < 2) {
+            // poisonedEffect();
             is_poisoned++;
-        } else {
-            printf("Vous etes plus affecte par le poison\n");
-            is_poisoned = 0;
+        } 
+        
+        if(is_poisoned > 2) {
+            printf("Le poison a disparu\n");
+            plongeur->effect = NO_EFFECT;
         }
+
         return 1;
     case PARALYSED:
         if (is_paralysed) {
             printf("Vous etes paralyse vous pouvez pas effectuer d'action");
             is_paralysed = 0;
+            plongeur->effect = NO_EFFECT;
             return 0;
         } else {
             printf("Vous etes plus affecter par la paralisie\n");
             return 1;
         }
-    
     default:
         break;
     }
+    return 1;
 }
 
 // Vérifie si la creature a un effet
-void checkEffectCreature(CreatureMarine *creature) {}
+// void checkEffectCreature(CreatureMarine *creature) {}
 
 // Supprime une creature si sa vie = 0
 void deleteCreatureInTabOfCreature()
@@ -418,10 +420,10 @@ void initFight(Plongeur *plongeur, int depth)
             }
             else if (initiative[i].type == ENT_PLONGEUR)
             {
-                while (plongeur->niveau_fatigue < 5 && total != 1) {
+                while (plongeur->niveau_fatigue <= 5 && total != 1) {
                     checkO2Plongeur(plongeur);
                     printf("\nTour du joueur\n");
-                    if(checkEffectPlongeur(plongeur)) {
+                    if(!checkEffectPlongeur(plongeur)) {
                         break;
                     }
                     ChoicePlayer(choice, plongeur, depth);
@@ -429,6 +431,7 @@ void initFight(Plongeur *plongeur, int depth)
                     initiative = realloc(initiative, sizeof(Entity) * total);
                 }
                 if(plongeur->niveau_fatigue > 0) {
+                    printf("Vous perdez 1 point de fatigue\n");
                     plongeur->niveau_fatigue--;
                 }
             }

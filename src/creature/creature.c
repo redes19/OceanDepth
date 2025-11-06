@@ -71,7 +71,7 @@ void addStatsCreature(CreatureMarine *creatureMarine) {
                 creatureMarine->effectCreature = frenesieSanguinaire;
             } else if(strcmp(prefixes[i], "Cora") == 0) {
                 creatureMarine->effectCreature = carapace;
-            } else if(strcmp(prefixes[i], "Aqua") == 0) {
+            } else if(strcmp(prefixes[i], "Aqua") == 0 || strcmp(prefixes[i], "Hydro") == 0) {
                 creatureMarine->effectCreature = confusion;
             } else if(strcmp(prefixes[i], "Thalo") == 0) {
                 creatureMarine->effectCreature = chargePerforante;
@@ -219,7 +219,7 @@ void displayCreature() {
 void cleanupAllCreatures() {
     // printf("Nettoyage complet des créatures...\n");
 
-    // 1️⃣ Libération du tableau global s’il existe
+    // Libération du tableau global s’il existe
     if (tabOfCreature != NULL) {
         for (int i = 0; i < nb_creatures; i++) {
             if (tabOfCreature[i].name != NULL) {

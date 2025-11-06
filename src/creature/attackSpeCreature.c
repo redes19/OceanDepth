@@ -3,10 +3,13 @@
 #include "creature.h"
 #include "../joueur/joueur.h"
 
+int is_poisoned = 2;
+int is_paralysed = 0;
+
 void poisonBite(CreatureMarine *creature, void *target) {
     Plongeur *plongeur = (Plongeur *)target;
     if (plongeur->effect){
-        printf("Le joueur a deja un effet et ne peux les cumuler\n");
+        printf("L'effet echoue\n");
         return;
     }
 
@@ -16,6 +19,7 @@ void poisonBite(CreatureMarine *creature, void *target) {
 
     plongeur->points_de_vie -= damage;
     plongeur->effect = POISONED;
+    is_poisoned = 0;
 }
 
 void frenesieSanguinaire(CreatureMarine *creatureMarine, void *target) {
@@ -28,7 +32,7 @@ void frenesieSanguinaire(CreatureMarine *creatureMarine, void *target) {
 void carapace(CreatureMarine *creature, void *target) {
     (void)target;
     if (creature->effect){
-        printf("%s a deja un effet et ne peux en cumuler\n", creature->name);
+        printf("L'effet echoue\n");
         return;
     }
 
@@ -46,9 +50,10 @@ void confusion(CreatureMarine *creature, void *target) {
     (void)creature;
     Plongeur *plongeur = (Plongeur *)target;
     if (plongeur->effect){
-        printf("Le joueur a deja un effet et ne peux les cumuler\n");
+        printf("L'effet echoue\n");
         return;
     }
 
-    plongeur->effect = REDUCEDDAMAGE;
+    plongeur->effect = PARALYSED;
+    is_paralysed = 1;
 }

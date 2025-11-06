@@ -7,8 +7,7 @@ typedef void(*EffectSpeCreature) (struct CreatureMarine *creatureMarine, void *t
 typedef enum {
     POISONED, // Retire 10PV 
     PARALYSED, // Saut le tour
-    PROTECTED, // Réduit de 20% les dégats
-    REDUCEDDAMAGE, // Réduction des dégats
+    PROTECTED, // Augmente de 20% les dégats
     NO_EFFECT,
 } Effect;
 
@@ -38,6 +37,8 @@ void confusion(CreatureMarine *creature, void *target);
 // Déclarations des variables globales
 extern CreatureMarine *tabOfCreature;
 extern int nb_creatures;
+extern int is_poisoned;
+extern int is_paralysed;
 
 CreatureMarine *createCreature(int depth);
 
