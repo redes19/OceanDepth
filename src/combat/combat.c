@@ -206,9 +206,6 @@ void choiceActionCreature(CreatureMarine *creature, Plongeur *plongeur) {
         return;
     }
 
-    /* DEBUG: afficher l'adresse du pointeur d'effet pour vérifier l'assignation */
-    printf("DEBUG: creature->name='%s' effect ptr=%p\n", creature->name, (void*)creature->effectCreature);
-
     if(choice == 1 && creature->effectCreature != NULL) {
         printf("%s lance une attaque special sur vous!!\n", creature->name);
         creature->effectCreature(creature, plongeur);
