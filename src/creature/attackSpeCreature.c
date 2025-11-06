@@ -22,11 +22,13 @@ void poisonBite(CreatureMarine *creature, void *target) {
     is_poisoned = 0;
 }
 
-void frenesieSanguinaire(CreatureMarine *creatureMarine, void *target) {
+void frenesieSanguinaire(CreatureMarine *creature, void *target) {
     (void)target; // évite -Wunused-parameter
-    if (creatureMarine->life < 50 ) {
-        creatureMarine->max_attack += (creatureMarine->max_attack * 30) / 100;
+    if (creature->life < 50 ) {
+        creature->max_attack += (creature->max_attack * 30) / 100;
     }
+
+    printf("%s utilise frenesie sanguinaire et gagne en puissance\n",creature->name);
 }
 
 void carapace(CreatureMarine *creature, void *target) {
@@ -35,12 +37,15 @@ void carapace(CreatureMarine *creature, void *target) {
         printf("L'effet echoue\n");
         return;
     }
+    printf("%s utilise carapace et se protège\n", creature->name);
 
     creature->effect = PROTECTED;
 }
 
 void chargePerforante(CreatureMarine *creature, void *target) {
     Plongeur *plongeur = (Plongeur *)target;
+    printf("%s utilise charge perforante sur vous\n", creature->name);
+    printf("Cette attaque traverse votre defense et vous inflige %d de degats\n", creature->max_attack);
 
     plongeur->points_de_vie -= creature->max_attack;
 }
@@ -52,6 +57,8 @@ void confusion(CreatureMarine *creature, void *target) {
         printf("L'effet echoue\n");
         return;
     }
+
+    printf("%s utilise confusion, cette attaque vous paralyse\n", creature->name);
 
     plongeur->effect = PARALYSED;
     is_paralysed = 1;
