@@ -65,7 +65,9 @@ void addStatsCreature(CreatureMarine *creatureMarine) {
                 creatureMarine->max_attack += rand() % (20 - 5 + 1) + 5;
             } else if (strcmp(prefixes[i], "Nero") == 0 || strcmp(prefixes[i], "Mara") == 0 ) {
                 creatureMarine->vitesse += rand() % (2 - 1 + 1) + 1;
-            } else if(strcmp(prefixes[i], "Nero") == 0 || strcmp(prefixes[i], "Medu") == 0) {
+            }
+            
+            if(strcmp(prefixes[i], "Nero") == 0 || strcmp(prefixes[i], "Medu") == 0) {
                 creatureMarine->effectCreature = poisonBite;
             } else if(strcmp(prefixes[i], "Mara") == 0) {
                 creatureMarine->effectCreature = frenesieSanguinaire;
@@ -134,11 +136,12 @@ CreatureMarine *createCreature(int depth) {
     creatureMarine->max_attack = rand() % (12 - 8 + 1) + 8;
     creatureMarine->min_attack = creatureMarine->max_attack;
     creatureMarine->vitesse = 1;
+    creatureMarine->effect = NO_EFFECT;
+    creatureMarine->effectCreature = NULL;
 
     // fonction pour ajouter des stats aux créatures
     addStatsCreature(creatureMarine);
     DifficultyOfMonster(depth, creatureMarine);
-
 
     creatureMarine->life = creatureMarine->max_life;
 

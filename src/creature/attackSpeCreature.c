@@ -8,7 +8,7 @@ int is_paralysed = 0;
 
 void poisonBite(CreatureMarine *creature, void *target) {
     Plongeur *plongeur = (Plongeur *)target;
-    if (plongeur->effect){
+    if (plongeur->effect != NO_EFFECT){
         printf("L'effet echoue\n");
         return;
     }
@@ -40,7 +40,6 @@ void carapace(CreatureMarine *creature, void *target) {
 }
 
 void chargePerforante(CreatureMarine *creature, void *target) {
-    (void)target;
     Plongeur *plongeur = (Plongeur *)target;
 
     plongeur->points_de_vie -= creature->max_attack;

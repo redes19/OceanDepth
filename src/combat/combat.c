@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <math.h>
 
 #include "../creature/creature.h"
@@ -58,7 +59,8 @@ int AttackPlayer(Plongeur *plongeur, int idCreature, int depth)
         creature->life = 0;
     }
 
-    plongeur->niveau_fatigue++;
+    // plongeur->niveau_fatigue++;
+    plongeur->niveau_fatigue += 5;
     plongeur->niveau_oxygene -= depthLvl(depth);
 
     return creature->life -= dommageFinal;
@@ -168,6 +170,8 @@ void actionPlayer(Plongeur *plongeur, int choice, int depth)
 
 void ChoicePlayer(int choice, Plongeur *plongeur, int depth)
 {
+    printf("Vous avez %d de fatigue\n", plongeur->niveau_fatigue);
+
     printf("\n");
     printf("Que voulez-vous faire?\n");
     printf("1) Attaquer\n");
@@ -189,6 +193,29 @@ int AttackCreature(Plongeur *plongeur, CreatureMarine *creature)
     int dommageFinal = (int)ceilf(damage);
 
     return plongeur->points_de_vie -= dommageFinal;
+}
+
+void choiceActionCreature(CreatureMarine *creature, Plongeur *plongeur) {
+    // int choice = rand() % 4;
+    int choice = 1;
+
+    printf("Choice creature : %d\n", choice);
+
+        if (!creature) {
+        printf("Erreur: creature == NULL dans choiceActionCreature()\n");
+        return;
+    }
+
+    /* DEBUG: afficher l'adresse du pointeur d'effet pour vérifier l'assignation */
+    printf("DEBUG: creature->name='%s' effect ptr=%p\n", creature->name, (void*)creature->effectCreature);
+
+    if(choice == 1 && creature->effectCreature != NULL) {
+        printf("%s lance une attaque special sur vous!!\n", creature->name);
+        creature->effectCreature(creature, plongeur);
+    } else {
+        AttackCreature(plongeur, creature);
+    }
+
 }
 
 int cmp(const void *a, const void *b)
@@ -415,21 +442,23 @@ void initFight(Plongeur *plongeur, int depth)
             if (initiative[i].type == ENT_CREATURE)
             {
                 printf("\nTour de la creature %d : %s de vitesse : %d\n", c->id + 1, c->name, c->vitesse);
-                AttackCreature(plongeur, c);
+                choiceActionCreature(c, plongeur);
                 pressEnterToContinue();
             }
             else if (initiative[i].type == ENT_PLONGEUR)
             {
-                while (plongeur->niveau_fatigue <= 5 && total != 1) {
+                while (plongeur->niveau_fatigue < 5 && total != 1) {
                     checkO2Plongeur(plongeur);
                     printf("\nTour du joueur\n");
                     if(!checkEffectPlongeur(plongeur)) {
                         break;
                     }
+
                     ChoicePlayer(choice, plongeur, depth);
                     total = deleteInitiativeCreature(total, initiative);
                     initiative = realloc(initiative, sizeof(Entity) * total);
                 }
+
                 if(plongeur->niveau_fatigue > 0) {
                     printf("Vous perdez 1 point de fatigue\n");
                     plongeur->niveau_fatigue--;
