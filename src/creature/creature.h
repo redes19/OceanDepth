@@ -9,6 +9,7 @@ typedef enum {
     PARALYSED, // Saut le tour
     PROTECTED, // Réduit de 20% les dégats
     REDUCEDDAMAGE, // Réduction des dégats
+    NO_EFFECT,
 } Effect;
 
 typedef struct CreatureMarine {

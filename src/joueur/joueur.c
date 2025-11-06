@@ -14,6 +14,7 @@ Plongeur *initializePlongeur(Zone zone) {
     plongeur->niveau_oxygene_max = 100;
     plongeur->niveau_fatigue = 0;
     plongeur->perles = 0;
+    plongeur->effect = NO_EFFECT;
     plongeur->zone = zone;
     return plongeur;
 }

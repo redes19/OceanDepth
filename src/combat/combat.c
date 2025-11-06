@@ -8,6 +8,9 @@
 #include "combat.h"
 #include "../clear/clear.h"
 
+int is_poisoned = 0;
+int is_paralysed = 1;
+
 void actionPlayer(Plongeur *plongeur, int choice, int depth);
 
 void pressEnterToContinue()
@@ -303,6 +306,37 @@ int checkCreature(int total)
     return 1;
 }
 
+// Vérifie si le player est affecter par un effet
+int checkEffectPlongeur(Plongeur *plongeur) {
+    switch (plongeur->effect)
+    {
+    case POISONED:
+        if (is_poisoned > 2) {
+            poisonedEffect();
+            is_poisoned++;
+        } else {
+            printf("Vous etes plus affecte par le poison\n");
+            is_poisoned = 0;
+        }
+        return 1;
+    case PARALYSED:
+        if (is_paralysed) {
+            printf("Vous etes paralyse vous pouvez pas effectuer d'action");
+            is_paralysed = 0;
+            return 0;
+        } else {
+            printf("Vous etes plus affecter par la paralisie\n");
+            return 1;
+        }
+    
+    default:
+        break;
+    }
+}
+
+// Vérifie si la creature a un effet
+void checkEffectCreature(CreatureMarine *creature) {}
+
 // Supprime une creature si sa vie = 0
 void deleteCreatureInTabOfCreature()
 {
@@ -385,11 +419,14 @@ void initFight(Plongeur *plongeur, int depth)
             else if (initiative[i].type == ENT_PLONGEUR)
             {
                 while (plongeur->niveau_fatigue < 5 && total != 1) {
+                    checkO2Plongeur(plongeur);
                     printf("\nTour du joueur\n");
+                    if(checkEffectPlongeur(plongeur)) {
+                        break;
+                    }
                     ChoicePlayer(choice, plongeur, depth);
                     total = deleteInitiativeCreature(total, initiative);
                     initiative = realloc(initiative, sizeof(Entity) * total);
-                    checkO2Plongeur(plongeur);
                 }
                 if(plongeur->niveau_fatigue > 0) {
                     plongeur->niveau_fatigue--;
