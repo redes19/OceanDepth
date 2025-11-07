@@ -15,6 +15,9 @@ Plongeur *initializePlongeur(Zone zone) {
     plongeur->niveau_fatigue = 0;
     plongeur->perles = 0;
     plongeur->effect = NO_EFFECT;
+    plongeur->comp[0] = apneeProlongee;
+    plongeur->comp[1] = dechargeElectrique;
+    plongeur->comp[2] = communicationMarine;
     plongeur->zone = zone;
     return plongeur;
 }

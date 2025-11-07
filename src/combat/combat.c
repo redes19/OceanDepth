@@ -468,6 +468,7 @@ void initFight(Plongeur *plongeur, int depth)
             if (initiative[i].type == ENT_CREATURE)
             {
                 printf("\nTour de la creature %s\n", c->name);
+                checkEffectCreature(c);
                 choiceActionCreature(c, plongeur);
                 pressEnterToContinue();
             }

@@ -4,6 +4,7 @@
 #include "../carte/carte.h"
 #include "../creature/creature.h"
 
+typedef void(*CompAquatique)(Plongeur *plongeur, void *target);
 
 typedef struct Plongeur {
     int points_de_vie;
@@ -16,9 +17,15 @@ typedef struct Plongeur {
     int niveau_fatigue;
     int perles;
     Effect effect;
+    CompAquatique comp[3];
 
     Zone zone;
 } Plongeur;
+
+// compétences aquatiques
+apneeProlongee(Plongeur *plongeur, void *target);
+dechargeElectrique(Plongeur *plongeur, void *target);
+communicationMarine(Plongeur *plongeur, void *target);
 
 Plongeur *initializePlongeur(Zone zone);
 void printPlongeur(Plongeur *plongeur);
