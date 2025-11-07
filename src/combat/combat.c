@@ -492,6 +492,12 @@ void initFight(Plongeur *plongeur, int depth)
                     printf("Vous perdez 1 point de fatigue\n");
                     plongeur->niveau_fatigue--;
                 }
+
+                if(plongeur->niveau_oxygene <= 92) {
+                    plongeur->niveau_oxygene += 8;
+                    printf("Vous récupèrer 8 d'oxygene\n");
+                }   
+
             }
         }
         printf("Fin du premier tour\n");
