@@ -78,13 +78,43 @@ int AttackPlayer(Plongeur *plongeur, int idCreature, int depth)
 
 void DisplayInventary(Plongeur *plongeur)
 {
+    (void)plongeur;
     printf("Ouverture inventaire\n");
     pressEnterToContinue();
 }
 
+void choiceCompAquatique(Plongeur *plongeur) {
+    int choice;
+    printf("choix : ");
+    if (scanf("%d", &choice) != 1) {
+        int c;
+        while ((c = getchar()) != '\n' && c != EOF) {}
+        printf("Entrée invalide.\n");
+        return 1;
+    }
+
+    switch (choice)
+    {
+    case 1:
+        plongeur->comp[0];
+        break;
+     case 2:
+        plongeur->comp[1];
+        break;
+     case 3:
+        plongeur->comp[2];
+        break;
+    
+    default:
+        break;
+    }
+}
+
 void AttackSpecialPlayer(Plongeur *plongeur, int depth)
 {
+    displayCompAquatique();
     printf("Attack spezcial\n");
+    choiceCompAquatique(plongeur);
     plongeur->niveau_fatigue += 3;
     plongeur->niveau_oxygene -= 2 * depthLvl(depth);
 }

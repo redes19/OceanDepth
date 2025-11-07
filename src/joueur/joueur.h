@@ -23,9 +23,11 @@ typedef struct Plongeur {
 } Plongeur;
 
 // compétences aquatiques
-apneeProlongee(Plongeur *plongeur, void *target);
-dechargeElectrique(Plongeur *plongeur, void *target);
-communicationMarine(Plongeur *plongeur, void *target);
+void apneeProlongee(Plongeur *plongeur, void *target);
+void dechargeElectrique(Plongeur *plongeur, void *target);
+void communicationMarine(Plongeur *plongeur, void *target);
+
+void displayCompAquatique();
 
 Plongeur *initializePlongeur(Zone zone);
 void printPlongeur(Plongeur *plongeur);

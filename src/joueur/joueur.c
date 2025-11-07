@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "joueur.h"
+#include "../creature/creature.h"
 
 
 Plongeur *initializePlongeur(Zone zone) {
