@@ -197,7 +197,7 @@ void ChoicePlayer(int choice, Plongeur *plongeur, int depth)
 int AttackCreature(Plongeur *plongeur, CreatureMarine *creature) 
 {
     printf("La creature %s vous attaque et vous subissez %d de degats!\nVous perdez aussi de l'oxygene a cause du stress de l'attaque\n\n", creature->name, creature->max_attack);
-    plongeur->niveau_oxygene -= 5;
+    plongeur->niveau_oxygene -= 3;
 
     float damage = creature->max_attack * (1 - plongeur->defense);
     int dommageFinal = (int)ceilf(damage);
@@ -206,19 +206,19 @@ int AttackCreature(Plongeur *plongeur, CreatureMarine *creature)
 }
 
 void choiceActionCreature(CreatureMarine *creature, Plongeur *plongeur) {
-    // int choice = rand() % 4;
-    int choice = 1;
+    int choice = rand() % 4;
 
-    printf("Choice creature : %d\n", choice);
-
-        if (!creature) {
+    if (!creature) {
         printf("Erreur: creature == NULL dans choiceActionCreature()\n");
         return;
     }
 
     if(choice == 1 && creature->effectCreature != NULL) {
-        printf("%s lance une attaque special sur vous!!\n", creature->name);
+        printf("%s lance une attaque special\n", creature->name);
         creature->effectCreature(creature, plongeur);
+        printf("Vous perdez de l'oxygène du au stress de l'attaque\n");
+        plongeur->niveau_oxygene -= 6;
+
     } else {
         AttackCreature(plongeur, creature);
     }
@@ -344,8 +344,9 @@ int checkEffectPlongeur(Plongeur *plongeur) {
     {
     case POISONED:
         if (is_poisoned < 2) {
-            // poisonedEffect();
             is_poisoned++;
+            printf("Vous perder 10 PV du au poison\n");
+            // mettre les dégats du poison !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         } 
         
         if(is_poisoned > 2) {
@@ -464,7 +465,7 @@ void initFight(Plongeur *plongeur, int depth)
 
             if (initiative[i].type == ENT_CREATURE)
             {
-                printf("\nTour de la creature %d : %s de vitesse : %d\n", c->id + 1, c->name, c->vitesse);
+                printf("\nTour de la creature %s\n", c->name);
                 choiceActionCreature(c, plongeur);
                 pressEnterToContinue();
             }
@@ -488,6 +489,8 @@ void initFight(Plongeur *plongeur, int depth)
                 }
             }
         }
+        printf("Fin du premier tour\n");
+        pressEnterToContinue();
         // trouver alternative pour linux/mac
         clearScreen();
     }

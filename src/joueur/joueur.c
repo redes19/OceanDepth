@@ -51,7 +51,7 @@ void printPlongeur(Plongeur *plongeur) {
 
 
     printf("Fatigue : [");
-    for (int i = 0; i < 6; i++ ) {
+    for (int i = 0; i < 5; i++ ) {
         if (plongeur->niveau_fatigue <= i) {
             printf("|");
         }else {
