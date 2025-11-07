@@ -39,6 +39,7 @@ extern CreatureMarine *tabOfCreature;
 extern int nb_creatures;
 extern int is_poisoned;
 extern int is_paralysed;
+extern int is_protected;
 
 CreatureMarine *createCreature(int depth);
 

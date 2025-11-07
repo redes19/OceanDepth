@@ -5,6 +5,7 @@
 
 int is_poisoned = 2;
 int is_paralysed = 0;
+int is_protected = 2;
 
 void poisonBite(CreatureMarine *creature, void *target) {
     Plongeur *plongeur = (Plongeur *)target;
@@ -37,8 +38,9 @@ void carapace(CreatureMarine *creature, void *target) {
         printf("L'effet echoue\n");
         return;
     }
-    printf("%s utilise carapace et se protège\n", creature->name);
+    printf("%s utilise carapace et se protège pendant 2 tours\n", creature->name);
 
+    is_protected = 0;
     creature->effect = PROTECTED;
 }
 

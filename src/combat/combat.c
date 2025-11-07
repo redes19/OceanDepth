@@ -44,6 +44,7 @@ int depthLvl(int depth) {
 
 int AttackPlayer(Plongeur *plongeur, int idCreature, int depth)
 {
+    float damage;
     CreatureMarine *creature = findCreatureById(idCreature);
     if (!creature)
     {
@@ -51,10 +52,19 @@ int AttackPlayer(Plongeur *plongeur, int idCreature, int depth)
         return -1;
     }
 
-    float dommage = plongeur->attack * (1 - creature->defense);
-    int dommageFinal = (int)ceilf(dommage);
+    float addProtection = (creature->effect == PROTECTED) ? 0.20f : 0.00f;
+    float effectifProtection = creature->defense + addProtection;
 
-    if (creature->life - dommageFinal <= 0)
+    // plafonner protection pour oas soigner l'ennemie
+    if (effectifProtection > 0.95f) {
+        effectifProtection = 0.95f;
+    }
+
+    damage = plongeur->attack * (1.0f - effectifProtection);
+    
+    int damageFinal = (int)ceilf(damage);
+
+    if (creature->life - damageFinal <= 0)
     {
         creature->life = 0;
     }
@@ -63,7 +73,7 @@ int AttackPlayer(Plongeur *plongeur, int idCreature, int depth)
     plongeur->niveau_fatigue += 5;
     plongeur->niveau_oxygene -= depthLvl(depth);
 
-    return creature->life -= dommageFinal;
+    return creature->life -= damageFinal;
 }
 
 void DisplayInventary(Plongeur *plongeur)
@@ -361,7 +371,23 @@ int checkEffectPlongeur(Plongeur *plongeur) {
 }
 
 // Vérifie si la creature a un effet
-// void checkEffectCreature(CreatureMarine *creature) {}
+int checkEffectCreature(CreatureMarine *creature) {
+    switch (creature->effect)
+    {
+    case PROTECTED:
+        if (is_protected >= 2) {
+            creature->effect = NO_EFFECT;
+        } else {
+            is_protected++;
+        }
+
+        return 1;
+    
+    default:
+        break;
+    }
+    return 1;
+}
 
 // Supprime une creature si sa vie = 0
 void deleteCreatureInTabOfCreature()
