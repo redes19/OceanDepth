@@ -10,7 +10,7 @@
 #include "../clear/clear.h"
 
 
-int actionPlayer(Plongeur *plongeur, int choice, int depth);
+int actionPlayer(Plongeur *plongeur, int choice, int depth, CreatureMarine *creature);
 
 void pressEnterToContinue()
 {
@@ -83,26 +83,26 @@ void DisplayInventary(Plongeur *plongeur)
     pressEnterToContinue();
 }
 
-void choiceCompAquatique(Plongeur *plongeur) {
+void choiceCompAquatique(Plongeur *plongeur, CreatureMarine *creature) {
     int choice;
     printf("choix : ");
     if (scanf("%d", &choice) != 1) {
         int c;
         while ((c = getchar()) != '\n' && c != EOF) {}
         printf("Entrée invalide.\n");
-        return 1;
+        return;
     }
 
     switch (choice)
     {
     case 1:
-        plongeur->comp[0];
+        plongeur->comp[0](plongeur, creature);
         break;
      case 2:
-        plongeur->comp[1];
+        plongeur->comp[1](plongeur, creature);
         break;
      case 3:
-        plongeur->comp[2];
+        plongeur->comp[2](plongeur, creature);
         break;
     
     default:
@@ -110,22 +110,22 @@ void choiceCompAquatique(Plongeur *plongeur) {
     }
 }
 
-void AttackSpecialPlayer(Plongeur *plongeur, int depth)
+void AttackSpecialPlayer(Plongeur *plongeur, int depth, CreatureMarine *creature)
 {
     displayCompAquatique();
     printf("Attack spezcial\n");
-    choiceCompAquatique(plongeur);
+    choiceCompAquatique(plongeur, creature);
     plongeur->niveau_fatigue += 3;
     plongeur->niveau_oxygene -= 2 * depthLvl(depth);
 }
 
-void DiminutionFatigue(Plongeur *plongeur, int choice, int dept) {
+void DiminutionFatigue(Plongeur *plongeur, int choice, int dept, CreatureMarine *creature) {
     printf("Vous recuperez de l energie\n");
     if(plongeur->niveau_fatigue > 0) {
         plongeur->niveau_fatigue--;
     } else {
         printf("Vous avez aucune fatigue\n");
-        actionPlayer(plongeur, choice, dept);
+        actionPlayer(plongeur, choice, dept, creature);
     }
 }
 
@@ -162,7 +162,7 @@ int choiceCreature()
     return 0;
 }
 
-int actionPlayer(Plongeur *plongeur, int choice, int depth)
+int actionPlayer(Plongeur *plongeur, int choice, int depth, CreatureMarine *creature)
 {
     printf("choix : ");
     if (scanf("%d", &choice) != 1) {
@@ -177,7 +177,7 @@ int actionPlayer(Plongeur *plongeur, int choice, int depth)
     case 1:
         if(plongeur->niveau_fatigue >= 5) {
             printf("Vous avez trop de fatigue pour attaquer!\n");
-            actionPlayer(plongeur, choice, depth);
+            actionPlayer(plongeur, choice, depth, creature);
         } else {
             AttackPlayer(plongeur, choiceCreature(), depth);
         }
@@ -188,13 +188,13 @@ int actionPlayer(Plongeur *plongeur, int choice, int depth)
     case 3:
         if(plongeur->niveau_fatigue > 3) {
             printf("Vous avez pas assez d energie pour lance une attaque special\n");
-            actionPlayer(plongeur, choice, depth);
+            actionPlayer(plongeur, choice, depth, creature);
         } else {
-            AttackSpecialPlayer(plongeur, depth);
+            AttackSpecialPlayer(plongeur, depth, creature);
         }
         return 1;
     case 4 : 
-        DiminutionFatigue(plongeur, choice, depth);
+        DiminutionFatigue(plongeur, choice, depth, creature);
         return 0;
     case 5 :
         return 0;
@@ -206,7 +206,7 @@ int actionPlayer(Plongeur *plongeur, int choice, int depth)
     }
 }
 
-int ChoicePlayer(int choice, Plongeur *plongeur, int depth)
+int ChoicePlayer(int choice, Plongeur *plongeur, int depth, CreatureMarine *creature)
 {
     printf("Vous avez %d de fatigue\n", plongeur->niveau_fatigue);
 
@@ -219,7 +219,7 @@ int ChoicePlayer(int choice, Plongeur *plongeur, int depth)
     printf("5) Mettre fin a votre tour\n");
     printf("\n");
 
-    if(!actionPlayer(plongeur, choice, depth)) {
+    if(!actionPlayer(plongeur, choice, depth, creature)) {
         return 0;
     }
 
@@ -504,14 +504,14 @@ void initFight(Plongeur *plongeur, int depth)
             }
             else if (initiative[i].type == ENT_PLONGEUR)
             {
-                while (plongeur->niveau_fatigue < 5 && total != 1) {
+                while (plongeur->niveau_fatigue <= 5 && total != 1) {
                     checkO2Plongeur(plongeur);
                     printf("\nTour du joueur\n");
                     if(!checkEffectPlongeur(plongeur)) {
                         break;
                     }
 
-                    if(!ChoicePlayer(choice, plongeur, depth)) {
+                    if(!ChoicePlayer(choice, plongeur, depth, c)) {
                         break;
                     }
 
