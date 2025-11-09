@@ -1,5 +1,4 @@
-#include "carte.h";
-#include "../joueur/joueur.h";
+#include "../joueur/joueur.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,7 +13,7 @@ Zone *addZone() {
 }
 
 int printZone(Plongeur *plongeur) {
-    printf("Vous etes dans la zone : %s",plongeur->zone);
+    printf("Vous etes dans la zone : %s\n",plongeur->zone.nom);
     printf("Quels action voulez-vous effectuer (taper le chiffre)\n"
         "1 - Se deplacer\n"
         "2 - Explorer la zone\n"

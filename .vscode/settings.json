@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "creature.h": "c",
+        "string.h": "c",
+        "clear.h": "c",
+        "joueur.h": "c"
+    }
+}
