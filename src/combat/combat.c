@@ -413,8 +413,15 @@ int checkEffectCreature(CreatureMarine *creature) {
         } else {
             is_protected++;
         }
-
         return 1;
+    case PARALYSED:
+        if(creature->effect == PARALYSED) {
+            creature->effect == NO_EFFECT;
+            return 0;
+        } else {
+            return 1;
+        }
+        
     
     default:
         break;
@@ -498,7 +505,11 @@ void initFight(Plongeur *plongeur, int depth)
             if (initiative[i].type == ENT_CREATURE)
             {
                 printf("\nTour de la creature %s\n", c->name);
-                checkEffectCreature(c);
+                
+                if(!checkEffectCreature(c)) {
+                    break;
+                }
+
                 choiceActionCreature(c, plongeur);
                 pressEnterToContinue();
             }
