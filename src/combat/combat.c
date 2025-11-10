@@ -77,10 +77,39 @@ int AttackPlayer(Plongeur *plongeur, int idCreature, int depth)
     return creature->life -= damageFinal;
 }
 
+// =====================================
+// Choix d'item utilisé par le plongeur
+// =====================================
+int ChoiceItem() {
+    int choice;
+    if (scanf("%d", &choice) != 1) {
+        int c;
+        while ((c = getchar()) != '\n' && c != EOF) {}
+        printf("Entrée invalide.\n");
+        return 1;
+    }
+
+    switch (choice)
+    {
+    case 1:
+        UseCapsuleO2(); // function a créer!!!!!!!!!
+        return 1;
+    case 2 :
+        UseCapsuleLife(); // function a créer!!!!!!!!!
+        return 1;
+
+        // possibilité d'utilisé d'autres items
+
+    default:
+        break;
+    }
+}
+
 void DisplayInventary(Plongeur *plongeur)
 {
-    (void)plongeur;
-    displayInventaire(&plongeur->inv);
+    printf("Choissi votre inventaire : \n");
+    DisplayIenvtaire(); // a créer!!!!!!!!!!!!!!!
+    ChoiceItem(); // a finir!!!!!!!!!!!!!!!!!!!
     pressEnterToContinue();
 }
 
@@ -185,7 +214,7 @@ int actionPlayer(Plongeur *plongeur, int choice, int depth, CreatureMarine *crea
         return 1;
     case 2:
         DisplayInventary(plongeur);
-        return 0;
+        return 1;
     case 3:
         if(plongeur->niveau_fatigue > 3) {
             printf("Vous avez pas assez d energie pour lance une attaque special\n");
