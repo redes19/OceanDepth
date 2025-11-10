@@ -80,7 +80,6 @@ int AttackPlayer(Plongeur *plongeur, int idCreature, int depth)
 void DisplayInventary(Plongeur *plongeur)
 {
     (void)plongeur;
-    printf("Ouverture inventaire\n");
     displayInventaire(&plongeur->inv);
     pressEnterToContinue();
 }

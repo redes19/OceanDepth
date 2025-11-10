@@ -199,6 +199,8 @@ const Objet* inv_get_combinaison_equipee(const Inventaire *inv) {
 static const char *type_to_str(TypeObjet t);
 
 void displayInventaire(const Inventaire *inv) {
+    printf("Ouverture inventaire\n");
+    
     if(!inv){
         printf("Inventaire invalide\n");
         return ;
@@ -211,7 +213,8 @@ void displayInventaire(const Inventaire *inv) {
         return;
     }
 
-        for (int i = 0; i < inv->nb_objets; ++i) {
+    for (int i = 0; i < inv->nb_objets; ++i) {
+        printf("Contentant inventaire %d", i);
         const Objet *o = &inv->slots[i];
         const char *type_str = type_to_str(o->type);
         printf("[%d] %s x%d - %s", i, o->nom, o->quantite, type_str);
