@@ -7,6 +7,7 @@
 #include "combat/combat.h"
 #include "joueur/joueur.h"
 #include "carte/carte.h"
+#include "./inventaire/inventaire.h"
 
 void afficher_intro() {
     printf("=====================================\n");
@@ -34,6 +35,7 @@ int main()
         if (strcmp(choix, "oui") == 0 || strcmp(choix, "OUI") == 0) {
             printf("\nParfait ! Préparez votre harpon... l’aventure commence !\n");
             Plongeur *joueur = initializePlongeur(zone[0]);// création du joueur
+            inv_init(&joueur->inv);
             // printPlongeur(joueur);//affichage du joueur
             action=printZone(joueur);
             if (action==1) {

@@ -86,6 +86,7 @@ int perles; // monnaie du joueur
 // ========================
 // API Inventaire – Fonctions
 // ========================
+void inv_init(Inventaire *inv);
 
 void displayInventaire(const Inventaire *inv);
 
