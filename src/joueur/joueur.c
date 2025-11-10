@@ -20,6 +20,8 @@ Plongeur *initializePlongeur(Zone zone) {
     plongeur->comp[1] = dechargeElectrique;
     plongeur->comp[2] = communicationMarine;
     plongeur->zone = zone;
+    
+
     return plongeur;
 }
 

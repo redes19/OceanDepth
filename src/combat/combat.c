@@ -8,6 +8,7 @@
 #include "../joueur/joueur.h"
 #include "combat.h"
 #include "../clear/clear.h"
+#include "../inventaire/inventaire.h"
 
 
 int actionPlayer(Plongeur *plongeur, int choice, int depth, CreatureMarine *creature);
@@ -80,6 +81,7 @@ void DisplayInventary(Plongeur *plongeur)
 {
     (void)plongeur;
     printf("Ouverture inventaire\n");
+    displayInventaire(&plongeur->inv);
     pressEnterToContinue();
 }
 
@@ -416,7 +418,7 @@ int checkEffectCreature(CreatureMarine *creature) {
         return 1;
     case PARALYSED:
         if(creature->effect == PARALYSED) {
-            creature->effect == NO_EFFECT;
+            creature->effect = NO_EFFECT;
             return 0;
         } else {
             return 1;

@@ -196,6 +196,54 @@ const Objet* inv_get_combinaison_equipee(const Inventaire *inv) {
     return (o->type == OBJ_COMBINAISON) ? o : NULL;
 }
 
+static const char *type_to_str(TypeObjet t);
+
+void displayInventaire(const Inventaire *inv) {
+    if(!inv){
+        printf("Inventaire invalide\n");
+        return ;
+    }
+
+    printf("Inventaire (%d/%d)\n", inv->nb_objets, INV_TAILLE_MAX);
+    if(inv->nb_objets == 0) {
+        printf("vide\n");
+        printf("=====================================\n");
+        return;
+    }
+
+        for (int i = 0; i < inv->nb_objets; ++i) {
+        const Objet *o = &inv->slots[i];
+        const char *type_str = type_to_str(o->type);
+        printf("[%d] %s x%d - %s", i, o->nom, o->quantite, type_str);
+
+        switch (o->type) {
+            case OBJ_CAPSULE_O2:
+                printf(" (Gain O2: %d)", o->data.capsule.gain_o2);
+                break;
+            case OBJ_TROUSSE_SOIN:
+                printf(" (Gain PV: %d)", o->data.trousse.gain_pv);
+                break;
+            case OBJ_ARME:
+                printf(" (ATK: %d-%d, O2/atk: %d, IGN_DEF: %d)",
+                       o->data.arme.atk_min, o->data.arme.atk_max,
+                       o->data.arme.o2_par_attaque, o->data.arme.ignore_defense);
+                break;
+            case OBJ_COMBINAISON:
+                printf(" (DEF+: %d, O2/tour: %d)",
+                       o->data.combi.bonus_defense, o->data.combi.o2_par_tour);
+                break;
+            default:
+                break;
+        }
+
+        if (i == inv->idx_arme_equipee) printf(" [Arme équipée]");
+        if (i == inv->idx_combi_equipee) printf(" [Combinaison équipée]");
+        printf("\n");
+    }
+    printf("=====================================\n");
+
+}
+
 // =========================
 // Récompenses / Perles
 // =========================

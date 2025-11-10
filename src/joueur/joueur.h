@@ -3,6 +3,7 @@
 
 #include "../carte/carte.h"
 #include "../creature/creature.h"
+#include "../inventaire/inventaire.h"
 
 typedef void(*CompAquatique)(Plongeur *plongeur, void *target);
 
@@ -18,6 +19,7 @@ typedef struct Plongeur {
     int perles;
     Effect effect;
     CompAquatique comp[3];
+    Inventaire inv;
 
     Zone zone;
 } Plongeur;
