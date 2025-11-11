@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <stdio.h>
 
 // =============================================================
 // INVENTAIRE – IMPLÉMENTATION
@@ -486,3 +487,70 @@ Objet objet_combinaison(const char *nom, int bonus_defense, int o2_par_tour) {
     o.data.combi.o2_par_tour = o2_par_tour;
     return o;
 }
+
+/* Affiche une chaîne lisible pour le type */
+static const char *type_to_label(TypeObjet t){
+  switch (t){
+    case OBJ_CAPSULE_O2: return "Capsule 02";
+    case OBJ_TROUSSE_SOIN: return "Trousse de soin";
+    case OBJ_ARME: return "Arme";
+    case OBJ_COMBINAISON: return "Combison";
+    default: return "Inconnu";
+  }
+}
+
+/* Affiche l'inventaire passé en paramètre */
+void displayInventaire(const Inventaire *inv){
+  if (!inv) {
+    printf("Iventaire invalide.\n");
+    return;
+  }
+
+  printf("=== Iventaire ===\n");
+  printf("Perles : %d\n", inv->perles);
+  printf("Slots  utilisés: %d/%d\n\n", inv->nb_objets, INV_TAILLE_MAX);
+
+  if(inv->nb_objets == 0){
+    printf("L'inventaire est vide;\n");
+    return;
+  }
+
+  for (int i =0; i < inv->nb_objets; i++){
+    const Objet *o = &inv->slots[i];
+    const char *label = type_to_label(o->type);
+    printf("[%d] %s - %s (qte: %d)", i, label, o->nom, o->quantite);
+
+    /* Marquer les équipements équipés */
+    if(i== inv->idx_arme_equipee) printf(" <-- Arme équipéé");
+    if(i== inv->idx_combi_equipee) printf(" <-- Combinaison équipéé");
+
+    /* Détails selon le type */
+    switch (o->type){
+      case OBJ_CAPSULE_O2:
+        printf(" | +%d 02\n", o->data.capsule.gain_o2);
+        break;
+      case OBJ_TROUSSE_SOIN:
+        printf(" | +%d PV\n", o->data.trousse.gain_pv);
+        break;
+      case OBJ_ARME:
+        printf(" | ATK: %d-%d | O2/par: %d | IgnoreDEF: %d\n",
+          o->data.arme.atk_min,
+          o->data.arme.atk_max,
+          o->data.arme.o2_par_attaque,
+          o->data.arme.ignore_defense);
+        break;
+      case OBJ_COMBINAISON:
+        printf(" | +DEF:%d 02/tour: %d\n", o->data.combi.bonus_defense, o->data.combi.o2_par_tour);
+        break;
+      default:
+        printf(" | (details inconnus)\n");
+        break;
+    }
+  }
+  printf("=================\n");
+}
+
+/* Wrapper "legacy" utilisé ailleurs dans le projet */
+void DisplayIventaire(void){
+  printf("Affichage inventaire indisponible ici : utilisez displayIventaire(&plongeur->inv)\n");
+ }
