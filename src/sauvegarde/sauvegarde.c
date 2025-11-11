@@ -2,6 +2,8 @@
 #include <string.h>
 #include "sauvegarde.h"
 
+ #include "../creature/creature.h"
+
 
 // =============================================================
 // SAUVEGARDE – IMPLÉMENTATION

@@ -81,6 +81,9 @@ typedef struct {
 // ========================
 // API Inventaire – Fonctions
 // ========================
+void inv_init(Inventaire *inv);
+
+void displayInventaire(const Inventaire *inv);
 
 // Initialisation
 void inv_init(Inventaire *inv);

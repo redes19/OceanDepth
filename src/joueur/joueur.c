@@ -1,17 +1,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "joueur.h"
+#include "../creature/creature.h"
 
 
 Plongeur *initializePlongeur(Zone zone) {
     Plongeur *plongeur = malloc(sizeof(Plongeur));
     plongeur->points_de_vie = 100;
     plongeur->points_de_vie_max = 100;
+    plongeur->attack = 20;
+    plongeur->vitesse = 2;
+    plongeur->defense = (rand() % 7 + 1) / 100.0f;
     plongeur->niveau_oxygene = 100;
     plongeur->niveau_oxygene_max = 100;
     plongeur->niveau_fatigue = 0;
     plongeur->perles = 0;
+    plongeur->effect = NO_EFFECT;
+    plongeur->comp[0] = apneeProlongee;
+    plongeur->comp[1] = dechargeElectrique;
+    plongeur->comp[2] = communicationMarine;
     plongeur->zone = zone;
+    
+
     return plongeur;
 }
 
@@ -47,7 +57,7 @@ void printPlongeur(Plongeur *plongeur) {
 
 
     printf("Fatigue : [");
-    for (int i = 0; i < 6; i++ ) {
+    for (int i = 0; i < 5; i++ ) {
         if (plongeur->niveau_fatigue <= i) {
             printf("|");
         }else {
