@@ -92,13 +92,11 @@ int ChoiceItem() {
     switch (choice)
     {
     case 1:
-        UseCapsuleO2(); // function a créer!!!!!!!!!
+        printf("Utilisation dune capsule de O2\n");
         return 1;
     case 2 :
-        UseCapsuleLife(); // function a créer!!!!!!!!!
+        printf("Utilisation dune capsule de vie\n");
         return 1;
-
-        // possibilité d'utilisé d'autres items
 
     default:
         break;
@@ -108,7 +106,7 @@ int ChoiceItem() {
 void DisplayInventary(Plongeur *plongeur)
 {
     printf("Choissi votre inventaire : \n");
-    DisplayIenvtaire(); // a créer!!!!!!!!!!!!!!!
+    displayInventaire(&plongeur->inv);
     ChoiceItem(); // a finir!!!!!!!!!!!!!!!!!!!
     pressEnterToContinue();
 }
