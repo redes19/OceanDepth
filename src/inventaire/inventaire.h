@@ -83,7 +83,7 @@ typedef struct {
 // ========================
 void inv_init(Inventaire *inv);
 
-void displayInventaire(const Inventaire *inv);
+int displayInventaire(const Inventaire *inv);
 
 // Initialisation
 void inv_init(Inventaire *inv);

@@ -56,7 +56,7 @@ int AttackPlayer(Plongeur *plongeur, int idCreature, int depth)
     float addProtection = (creature->effect == PROTECTED) ? 0.20f : 0.00f;
     float effectifProtection = creature->defense + addProtection;
 
-    // plafonner protection pour oas soigner l'ennemie
+    // plafonner protection pour pas soigner l'ennemie
     if (effectifProtection > 0.95f) {
         effectifProtection = 0.95f;
     }
@@ -80,36 +80,36 @@ int AttackPlayer(Plongeur *plongeur, int idCreature, int depth)
 // =====================================
 // Choix d'item utilisé par le plongeur
 // =====================================
-int ChoiceItem() {
-    int choice;
-    if (scanf("%d", &choice) != 1) {
+int ChoiceItem(Plongeur *plongeur) {
+    int slot;
+    printf("Indice du slot à utiliser : ");
+    if (scanf("%d", &slot) != 1) {
         int c;
         while ((c = getchar()) != '\n' && c != EOF) {}
         printf("Entrée invalide.\n");
         return 1;
     }
 
-    switch (choice)
-    {
-    case 1:
-        UseCapsuleO2(); // function a créer!!!!!!!!!
-        return 1;
-    case 2 :
-        UseCapsuleLife(); // function a créer!!!!!!!!!
-        return 1;
+    int res = inv_utiliser_objet(&plongeur->inv, slot-1,
+        &plongeur->points_de_vie, plongeur->points_de_vie_max,
+        &plongeur->niveau_oxygene, plongeur->niveau_oxygene_max,
+        &plongeur->niveau_fatigue);
 
-        // possibilité d'utilisé d'autres items
-
-    default:
-        break;
+    if (res == 0) {
+        printf("Objet utilisé avec succès.\n");
+    } else {
+        printf("Impossible d'utiliser cet objet (slot invalide / type non consommable / déjà full).\n");
     }
+    return 1;
 }
 
 void DisplayInventary(Plongeur *plongeur)
 {
     printf("Choissi votre inventaire : \n");
-    DisplayIenvtaire(); // a créer!!!!!!!!!!!!!!!
-    ChoiceItem(); // a finir!!!!!!!!!!!!!!!!!!!
+    if(!displayInventaire(&plongeur->inv)) {
+        return;
+    }
+    ChoiceItem(plongeur); 
     pressEnterToContinue();
 }
 
@@ -214,7 +214,7 @@ int actionPlayer(Plongeur *plongeur, int choice, int depth, CreatureMarine *crea
         return 1;
     case 2:
         DisplayInventary(plongeur);
-        return 1;
+        return 0;
     case 3:
         if(plongeur->niveau_fatigue > 3) {
             printf("Vous avez pas assez d energie pour lance une attaque special\n");
@@ -238,6 +238,7 @@ int actionPlayer(Plongeur *plongeur, int choice, int depth, CreatureMarine *crea
 
 int ChoicePlayer(int choice, Plongeur *plongeur, int depth, CreatureMarine *creature)
 {
+    printPlongeur(plongeur);
     printf("Vous avez %d de fatigue\n", plongeur->niveau_fatigue);
 
     printf("\n");
@@ -547,6 +548,10 @@ void initFight(Plongeur *plongeur, int depth)
             {
                 while (plongeur->niveau_fatigue <= 5 && total != 1) {
                     checkO2Plongeur(plongeur);
+
+                    plongeur->points_de_vie = 50;
+                    plongeur->niveau_oxygene = 50;
+
                     printf("\nTour du joueur\n");
                     if(!checkEffectPlongeur(plongeur)) {
                         break;
@@ -568,8 +573,8 @@ void initFight(Plongeur *plongeur, int depth)
                 if(plongeur->niveau_oxygene <= 92) {
                     plongeur->niveau_oxygene += 8;
                     printf("Vous récupèrer 8 d'oxygene\n");
-                }   
-
+                }  
+                printPlongeur(plongeur);
             }
         }
         printf("Fin du premier tour\n");
