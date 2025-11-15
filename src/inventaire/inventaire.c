@@ -285,6 +285,10 @@ int inv_sauvegarder_fichier(const Inventaire *inv, const char *chemin) {
                 fprintf(f, "COMBI:DEF:%d:O2_TOUR:%d\n",
                 o->data.combi.bonus_defense, o->data.combi.o2_par_tour);
             break;
+            case OBJ_CARTE:
+                printf(" | Carte pour le niveau %d\n", o->data.carte.niveau);
+            break;
+
             default:
                 fprintf(f, "UNK\n");
             break;
@@ -489,6 +493,18 @@ Objet objet_combinaison(const char *nom, int bonus_defense, int o2_par_tour) {
     o.data.combi.o2_par_tour = o2_par_tour;
     return o;
 }
+
+Objet objet_carte(const char *nom, int niveau) {
+    Objet o;
+    memset(&o, 0, sizeof(o));
+    o.type = OBJ_CARTE;
+    strncpy(o.nom, nom ? nom : "Carte Niveau Inférieur", NOM_TAILLE_MAX - 1);
+    o.nom[NOM_TAILLE_MAX - 1] = '\0';
+    o.quantite = 1; // cartes non empilables
+    o.data.carte.niveau = niveau;
+    return o;
+}
+
 
 /* Affiche une chaîne lisible pour le type */
 static const char *type_to_label(TypeObjet t){
