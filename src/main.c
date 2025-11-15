@@ -51,6 +51,22 @@ int main()
 
             generateCreatureInTab(2, depth);
 
+            // item test
+            Objet trousse = objet_trousse("Trousse_Soin", 1, 20);
+            Objet capsule = objet_capsule("Capsule_O2", 1, 20);
+
+            if (inv_ajouter_objet(&joueur->inv, &trousse) == 0) {
+                printf("Trousse de soin ajoutee a l'inventaire.\n");
+            } else {
+                printf("Echec ajout trousse.\n");
+            }
+
+            if (inv_ajouter_objet(&joueur->inv, &capsule) == 0) {
+                printf("Capsule O2 ajoutee a l'inventaire.\n");
+            } else {
+                printf("Echec ajout capsule O2.\n");
+            }
+
             initFight(joueur, depth);
 
             cleanupAllCreatures();

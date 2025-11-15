@@ -140,6 +140,7 @@ int *fatigue)
             int gain = o->data.capsule.gain_o2;
             *o2 += gain;
             if (*o2 > o2_max) *o2 = o2_max; // clamp
+            printf("Vous avez utilise une capsule de O2\n");
         } break;
 
 
@@ -149,6 +150,7 @@ int *fatigue)
             int gain = o->data.trousse.gain_pv;
             *pv += gain;
             if (*pv > pv_max) *pv = pv_max; // clamp
+            printf("Vous avez utilise une trousse de soin\n");
         } break;
 
 
@@ -500,10 +502,10 @@ static const char *type_to_label(TypeObjet t){
 }
 
 /* Affiche l'inventaire passé en paramètre */
-void displayInventaire(const Inventaire *inv){
+int displayInventaire(const Inventaire *inv){
   if (!inv) {
     printf("Iventaire invalide.\n");
-    return;
+    return 0;
   }
 
   printf("=== Iventaire ===\n");
@@ -512,7 +514,7 @@ void displayInventaire(const Inventaire *inv){
 
   if(inv->nb_objets == 0){
     printf("L'inventaire est vide;\n");
-    return;
+    return 0;
   }
 
   for (int i =0; i < inv->nb_objets; i++){
@@ -548,6 +550,7 @@ void displayInventaire(const Inventaire *inv){
     }
   }
   printf("=================\n");
+  return 1;
 }
 
 /* Wrapper "legacy" utilisé ailleurs dans le projet */
