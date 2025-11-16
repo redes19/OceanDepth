@@ -621,9 +621,6 @@ void initFight(Plongeur *plongeur, int depth)
                 while (plongeur->niveau_fatigue <= 5 && total != 1) {
                     checkO2Plongeur(plongeur);
 
-                    plongeur->points_de_vie = 50;
-                    plongeur->niveau_oxygene = 50;
-
                     printf("\nTour du joueur\n");
                     if(!checkEffectPlongeur(plongeur)) {
                         break;
