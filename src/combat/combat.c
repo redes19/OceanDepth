@@ -13,6 +13,10 @@
 
 int actionPlayer(Plongeur *plongeur, int choice, int depth, CreatureMarine *creature);
 
+// =====================================
+// Affiche un message et attend que l'utilisateur appuie sur Entrée.
+//   Utilisé pour faire des pauses entre les étapes d'affichage.
+// =====================================
 void pressEnterToContinue()
 {
     printf("\nAppuyez sur Entrée pour continuer...\n");
@@ -20,6 +24,10 @@ void pressEnterToContinue()
     getchar();
 }
 
+// =====================================
+// Recherche dans le tableau global `tabOfCreature` une créature par son id.
+//   Retourne un pointeur vers la `CreatureMarine` ou NULL si introuvable.
+// =====================================
 static CreatureMarine *findCreatureById(int id)
 {
     for (int i = 0; i < nb_creatures; i++)
@@ -32,6 +40,10 @@ static CreatureMarine *findCreatureById(int id)
     return NULL;
 }
 
+// =====================================
+// Calcule un "niveau de profondeur" (entier) à partir d'une profondeur en mètres.
+//   Valeurs retournées : 1,2,3,4 (utilisé pour coûts en oxygène).
+// =====================================
 int depthLvl(int depth) {
     if (depth < 50) {
         return 1;
@@ -43,6 +55,9 @@ int depthLvl(int depth) {
     return 4;
 }
 
+// =====================================
+// Attaque une créature identifiée par `idCreature` avec les stats du plongeur.
+// =====================================
 int AttackPlayer(Plongeur *plongeur, int idCreature, int depth)
 {
     float damage;
@@ -103,6 +118,9 @@ int ChoiceItem(Plongeur *plongeur) {
     return 1;
 }
 
+// =====================================
+// Affiche l'inventaire du plongeur
+// =====================================
 void DisplayInventary(Plongeur *plongeur)
 {
     printf("Choissi votre inventaire : \n");
@@ -113,6 +131,9 @@ void DisplayInventary(Plongeur *plongeur)
     pressEnterToContinue();
 }
 
+// =====================================
+// Fonction pour choisir la compétence que le plongeur a choisi
+// =====================================
 void choiceCompAquatique(Plongeur *plongeur, CreatureMarine *creature) {
     int choice;
     printf("choix : ");
@@ -140,6 +161,9 @@ void choiceCompAquatique(Plongeur *plongeur, CreatureMarine *creature) {
     }
 }
 
+// =====================================
+// Affiche les compétence du joueur
+// =====================================
 void AttackSpecialPlayer(Plongeur *plongeur, int depth, CreatureMarine *creature)
 {
     displayCompAquatique();
@@ -149,6 +173,9 @@ void AttackSpecialPlayer(Plongeur *plongeur, int depth, CreatureMarine *creature
     plongeur->niveau_oxygene -= 2 * depthLvl(depth);
 }
 
+// =====================================
+// Diminue la fatigue du joueur
+// =====================================
 void DiminutionFatigue(Plongeur *plongeur, int choice, int dept, CreatureMarine *creature) {
     printf("Vous recuperez de l energie\n");
     if(plongeur->niveau_fatigue > 0) {
@@ -159,6 +186,9 @@ void DiminutionFatigue(Plongeur *plongeur, int choice, int dept, CreatureMarine 
     }
 }
 
+// =====================================
+// Fonction pour choisir la creature à attaquer
+// =====================================
 int choiceCreature()
 {
     int choice;
@@ -192,6 +222,9 @@ int choiceCreature()
     return 0;
 }
 
+// =====================================
+// Fonction pour choisir l'action du plongeur
+// =====================================
 int actionPlayer(Plongeur *plongeur, int choice, int depth, CreatureMarine *creature)
 {
     printf("choix : ");
@@ -236,6 +269,9 @@ int actionPlayer(Plongeur *plongeur, int choice, int depth, CreatureMarine *crea
     }
 }
 
+// =====================================
+// Affiche les choix d'action possible
+// =====================================
 int ChoicePlayer(int choice, Plongeur *plongeur, int depth, CreatureMarine *creature)
 {
     printPlongeur(plongeur);
@@ -257,6 +293,9 @@ int ChoicePlayer(int choice, Plongeur *plongeur, int depth, CreatureMarine *crea
     return 1;
 }
 
+// =====================================
+// Fonction d'attaque des creatures
+// =====================================
 int AttackCreature(Plongeur *plongeur, CreatureMarine *creature) 
 {
     printf("La creature %s vous attaque et vous subissez %d de degats!\nVous perdez aussi de l'oxygene a cause du stress de l'attaque\n\n", creature->name, creature->max_attack);
@@ -268,6 +307,9 @@ int AttackCreature(Plongeur *plongeur, CreatureMarine *creature)
     return plongeur->points_de_vie -= dommageFinal;
 }
 
+// =====================================
+// Fonction pour choisir l'action de la creature
+// =====================================
 void choiceActionCreature(CreatureMarine *creature, Plongeur *plongeur) {
     int choice = rand() % 4;
 
@@ -288,6 +330,10 @@ void choiceActionCreature(CreatureMarine *creature, Plongeur *plongeur) {
 
 }
 
+// =====================================
+// Fonction de comparaison utilisée par qsort pour l'initiative.
+// Compare la vitesse des entités (plongeur vs créature).
+// =====================================
 int cmp(const void *a, const void *b)
 {
     const Entity *ea = a;
@@ -318,6 +364,10 @@ int cmp(const void *a, const void *b)
     return v2 - v1;
 }
 
+// =====================================
+// Initialise le tableau d'initiative (Entité joueur + créatures) puis trié.
+// Retourne un tableau d'Entity alloué
+// =====================================
 Entity *initInitiative(Plongeur *plongeur, int total)
 {
     Entity *tabInitiative = malloc(sizeof(Entity) * total);
@@ -341,6 +391,9 @@ Entity *initInitiative(Plongeur *plongeur, int total)
     return tabInitiative;
 }
 
+// =====================================
+// Affiche les creatures 
+// =====================================
 void displayCreatures(Entity *initiative, int total)
 {
     printf("\n\n==========================================================================\n");
@@ -366,6 +419,9 @@ void displayCreatures(Entity *initiative, int total)
     printf("\n==========================================================================\n\n");
 }
 
+// =====================================
+// Vérifie si la vie du plongeur > 0
+// =====================================
 int playerIsAlive(Plongeur *plongeur)
 {
     if (plongeur->points_de_vie <= 0)
@@ -376,6 +432,9 @@ int playerIsAlive(Plongeur *plongeur)
     return 1;
 }
 
+// =====================================
+// Vérifie l'oxygène du plongeur
+// =====================================
 void checkO2Plongeur(Plongeur *plongeur) { 
     if (plongeur->niveau_oxygene <= 10) {
         printf("\n=============================================\n|                                           |");
@@ -389,7 +448,9 @@ void checkO2Plongeur(Plongeur *plongeur) {
     }
 }
 
-// Verifie s'il reste des creatures a combattre
+// =====================================
+// Vérifie s'il reste des creatures a combatre
+// =====================================
 int checkCreature(int total)
 {
     if (total == 1 || nb_creatures == 0)
@@ -401,7 +462,9 @@ int checkCreature(int total)
     return 1;
 }
 
-// Vérifie si le player est affecter par un effet
+// =====================================
+// Vérifie si le plongeur est affecter par des effets
+// =====================================
 int checkEffectPlongeur(Plongeur *plongeur) {
     switch (plongeur->effect)
     {
@@ -434,7 +497,9 @@ int checkEffectPlongeur(Plongeur *plongeur) {
     return 1;
 }
 
-// Vérifie si la creature a un effet
+// =====================================
+// Vérifie si creature[i] est affecter par des effets
+// =====================================
 int checkEffectCreature(CreatureMarine *creature) {
     switch (creature->effect)
     {
@@ -460,7 +525,9 @@ int checkEffectCreature(CreatureMarine *creature) {
     return 1;
 }
 
-// Supprime une creature si sa vie = 0
+// =====================================
+// Supprime les créature dans TabOfCreature dont la vie <= 0
+// =====================================
 void deleteCreatureInTabOfCreature()
 {
     for (int i = 0; i < nb_creatures; i++)
@@ -477,7 +544,9 @@ void deleteCreatureInTabOfCreature()
     }
 }
 
-// Supprime les creatures morte
+// =====================================
+// Supprime les créature dans InitiativeCreature dont la vie <= 0
+// =====================================
 int deleteInitiativeCreature(int total, Entity *initiative)
 {
     for (int i = 0; i < total; i++)
@@ -514,6 +583,9 @@ int deleteInitiativeCreature(int total, Entity *initiative)
     return total;
 }
 
+// =====================================
+// Fonction du combat
+// =====================================
 void initFight(Plongeur *plongeur, int depth)
 {
     clearScreen();
@@ -587,11 +659,3 @@ void initFight(Plongeur *plongeur, int depth)
     free(initiative);
 }
 
-// Ordre des actions par tour
-// Initiative d'attaque selon vitesse
-// Vérification a faire su le player ordre : 
-//          Actions du joueur jusqu'à épuisement fatigue
-//          Consommation oxygène automatique (-2 à -5 selon profondeur)
-//          Vérification critique : si oxygène ≤ 10, alerte obligatoire
-//          Récupération fatigue (+1 niveau)
-// Vérification fin : victoire, défaite ou continuation
