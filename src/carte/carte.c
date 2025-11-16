@@ -1,5 +1,6 @@
 #include "carte.h"
 #include "../joueur/joueur.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,52 +17,80 @@ Zone **newCarte() {
         carte[i] = malloc(cols * sizeof(Zone));
     }
 
-    carte[0][0] = (Zone){"Base", 0, 0, 0, 1};
-    carte[0][1] = (Zone){"Ocean", 0, 0, 0, 1};
-    carte[0][2] = (Zone){"Epave", 0, 1, 1, 0};
-    carte[0][3] = (Zone){"Grotte", 0, 1, 0, 0};
+    carte[0][0] = (Zone){"Base", 0, 0, 0};
+    carte[0][1] = (Zone){"Ocean", 0, 0, 0};
+    carte[0][2] = (Zone){"Epave", 0, 1, 1};
+    carte[0][3] = (Zone){"Grotte", 0, 1, 0};
 
-    carte[1][0] = (Zone){"Recif", 50, 2, 0, 1};
-    carte[1][1] = (Zone){"Epave", 50, 2, 1, 0};
-    carte[1][2] = (Zone){"Algues", 50, 0, 0, 1};
-    carte[1][3] = (Zone){"Grotte", 50, 1, 0, 0};
+    carte[1][0] = (Zone){"Recif", 50, 2, 0};
+    carte[1][1] = (Zone){"Epave", 50, 2, 1};
+    carte[1][2] = (Zone){"Algues", 50, 0, 0};
+    carte[1][3] = (Zone){"Grotte", 50, 1, 0};
 
-    carte[2][0] = (Zone){"Requin", 150, 3, 0, 0};
-    carte[2][1] = (Zone){"Vide", 150, 0, 0, 1};
-    carte[2][2] = (Zone){"Kraken", 150, 5, 1, 0};
-    carte[2][3] = (Zone){"Vide", 150, 0, 0, 1};
+    carte[2][0] = (Zone){"Requin", 150, 3, 0};
+    carte[2][1] = (Zone){"Vide", 150, 0, 0};
+    carte[2][2] = (Zone){"Kraken", 150, 5, 1};
+    carte[2][3] = (Zone){"Vide", 150, 0, 0};
 
-    carte[3][0] = (Zone){"Abyss", 300, 4, 1, 0};
-    carte[3][1] = (Zone){"Fosse", 300, 2, 0, 0};
-    carte[3][2] = (Zone){"Epave Géante", 300, 6, 1, 0};
-    carte[3][3] = (Zone){"Caverne Noire", 300, 3, 0, 0};
+    carte[3][0] = (Zone){"Abyss", 300, 4, 1};
+    carte[3][1] = (Zone){"Fosse", 300, 2, 0};
+    carte[3][2] = (Zone){"Epave Géante", 300, 6, 1};
+    carte[3][3] = (Zone){"Caverne Noire", 300, 3, 0};
 
     return carte;
 }
 
-// Affiche toute la carte
-void printCarte(Zone **zone) {
-    for (int i = 0; i < 4; i++) {
-        printf("---- ZONE %d ----\n", i);
-        for (int j = 0; j < 4; j++) { // 4 colonnes max
-            printf("%s\n", zone[i][j].nom);
+int a_la_carte(Inventaire *inv, int niveau_cible) {
+    if (!inv) return 0;
+    for (int i = 0; i < inv->nb_objets; i++) {
+        Objet *o = &inv->slots[i];
+        if (o->type == OBJ_CARTE && o->data.carte.niveau == niveau_cible && o->quantite > 0) {
+            return 1; // carte trouvée
         }
-        printf("\n");
     }
+    return 0; // pas de carte
+}
+
+
+// Affiche toute la carte
+void printCarte(Plongeur *plongeur, Zone **zone) {
+    for (int i = 0; i < 4; i++) {
+        int afficher = 0;
+
+        // Vérifie si cette ligne contient au moins une case plus profonde
+        for (int j = 0; j < 4; j++) {
+            if (zone[i][j].profondeur <= plongeur->zone->profondeur) {
+                afficher = 1;
+                break;
+            }
+        }
+
+        if (afficher) {
+            printf("---- ZONE %d ----\n", i+1);
+            for (int k = 0; k < 4; k++) {
+                    printf("%s\n", zone[i][k].nom);
+            }
+            printf("\n");
+        }else{
+            printf("---- ZONE %d ----\n", i+1);
+            for (int k = 0; k < 4; k++) {
+                    printf("???\n");
+            }
+        }
+    }
+
 }
 
 // Affiche les zones visibles pour le plongeur et demande une action
 int printZone(Plongeur *plongeur, Zone **zone) {
     for (int i = 0; i < 4; i++) {
         // Vérifie si la profondeur correspond à celle du plongeur
-        for (int j = 0; j < 4; j++) {
-            if (zone[i][j].profondeur == plongeur->zone->profondeur) {
-                printf("---- ZONE %d ----\n", i);
-                for (int k = 0; k < 4; k++) {
-                    printf("%s\n", zone[i][k].nom);
-                }
+        
+        if (zone[i][0].profondeur == plongeur->zone->profondeur) {
+            printf("---- ZONE %d ----\n", i+1);
+            for (int j = 0; j < 4; j++) {                       
+                printf("%s\n", zone[i][j].nom);                           
                 printf("\n");
-                
             }
         }
     }
@@ -168,20 +197,52 @@ void explorerZone(Plongeur *joueur) {
 
         if (tirage == 0) {
             printf("Attention ! Un monstre apparaît dans %s !\n", z->nom);
-            // combat(joueur, z->monstre);
-            z->ennemis = 0;
+            int depth = z->profondeur;
+            int nb;
+            if (depth==50)
+            {
+                nb = (rand() % 2) + 1;
+            }else if (depth==100)
+            {
+                nb = (rand() % 3) + 1;
+            }else if (depth==150)
+            {
+                nb = (rand() % 4) + 1;
+            }else{
+                nb = (rand() % 5) + 1;
+            }
+            generateCreatureInTab(nb, depth);
+            initFight(joueur, depth);
+            cleanupAllCreatures();
+            z->ennemis--;
         } else {
             printf("Vous trouvez un loot dans %s !\n", z->nom);
             // Objet loot = genererLootAleatoire();
             // inv_ajouter_objet(&joueur->inv, &loot);
-            z->tresor = 0;
+            z->tresor--;
         }
 
     } else if (z->ennemis > 0) {
         // Seulement un monstre
         printf("Attention ! Un monstre apparaît dans %s !\n", z->nom);
-        // combat(joueur, z->monstre);
-        z->ennemis = 0;
+        int depth = z->profondeur;
+        int nb;
+        if (depth==50)
+        {
+            nb = (rand() % 2) + 1;
+        }else if (depth==100)
+        {
+            nb = (rand() % 3) + 1;
+        }else if (depth==150)
+        {
+            nb = (rand() % 4) + 1;
+        }else{
+            nb = (rand() % 5) + 1;
+        }
+        generateCreatureInTab(nb, depth);
+        initFight(joueur, depth);
+        cleanupAllCreatures();
+        z->ennemis--;
 
     } else if (z->tresor > 0) {
         // Seulement un loot
@@ -190,4 +251,16 @@ void explorerZone(Plongeur *joueur) {
         // inv_ajouter_objet(&joueur->inv, &loot);
         z->tresor = 0;
     }
+
+}
+
+int fin_jeu(Inventaire *inv){
+    if (!inv) return 0;
+    for (int i = 0; i < inv->nb_objets; i++) {
+        Objet *o = &inv->slots[i];
+        if (o->type == OBJ_CARTE && o->data.carte.niveau == 4 && o->quantite > 0) {
+            return 1; // carte trouvée
+        }
+    }
+    return 0;
 }
