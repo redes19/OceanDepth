@@ -7,7 +7,8 @@
 #include "combat/combat.h"
 #include "joueur/joueur.h"
 #include "carte/carte.h"
-#include "./inventaire/inventaire.h"
+#include "sauvegarde/sauvegarde.h"
+#include "inventaire/inventaire.h"
 
 void afficher_intro() {
     printf("=====================================\n");
@@ -41,30 +42,27 @@ int main() {
                 perteO2(joueur);
             }
             else if (action == 2) {
-
+                explorerZone(joueur);
             }
             else if (action == 3) {
+                
                 fin = 0;
             }
             else if (action == 4) {
-                    printCarte(joueur, carte);
+                printCarte(joueur, carte);
             }
             else {
                 printf("Action invalide.\n");
             }
-            /*generateCreatureInTab(2, depth);
-
-            initFight(joueur, depth);
-
-            cleanupAllCreatures();*/
-
-
+            if(fin_jeu(&joueur->inv)){
+                fin=0;
+            }
         }
     }else if (strcmp(choix, "non") == 0) {
         printf("\nVous avez choisi de rester en surface. À bientot ! \n");
-        fin = 0;
-    }
         
+    }
+
     
 
     // Libération de la mémoire de la carte

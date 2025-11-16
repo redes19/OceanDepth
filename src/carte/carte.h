@@ -15,5 +15,6 @@ void printCarte(Plongeur *plongeur, Zone **zone);
 int printZone(Plongeur *plongeur, Zone **zone);
 void deplacement(Plongeur *joueur,Zone **carte);
 int a_la_carte(Inventaire *inv, int niveau_cible);
-
+void explorerZone(Plongeur *joueur);
+int fin_jeu(Inventaire *inv);
 #endif // CARTE_H

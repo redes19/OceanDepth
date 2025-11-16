@@ -66,13 +66,13 @@ void printCarte(Plongeur *plongeur, Zone **zone) {
         }
 
         if (afficher) {
-            printf("---- ZONE %d ----\n", i);
+            printf("---- ZONE %d ----\n", i+1);
             for (int k = 0; k < 4; k++) {
                     printf("%s\n", zone[i][k].nom);
             }
             printf("\n");
         }else{
-            printf("---- ZONE %d ----\n", i);
+            printf("---- ZONE %d ----\n", i+1);
             for (int k = 0; k < 4; k++) {
                     printf("???\n");
             }
@@ -87,7 +87,7 @@ int printZone(Plongeur *plongeur, Zone **zone) {
         // Vérifie si la profondeur correspond à celle du plongeur
         
         if (zone[i][0].profondeur == plongeur->zone->profondeur) {
-            printf("---- ZONE %d ----\n", i);
+            printf("---- ZONE %d ----\n", i+1);
             for (int j = 0; j < 4; j++) {                       
                 printf("%s\n", zone[i][j].nom);                           
                 printf("\n");
@@ -197,20 +197,52 @@ void explorerZone(Plongeur *joueur) {
 
         if (tirage == 0) {
             printf("Attention ! Un monstre apparaît dans %s !\n", z->nom);
-            // combat(joueur, z->monstre);
-            z->ennemis = 0;
+            int depth = z->profondeur;
+            int nb;
+            if (depth==50)
+            {
+                nb = (rand() % 2) + 1;
+            }else if (depth==100)
+            {
+                nb = (rand() % 3) + 1;
+            }else if (depth==150)
+            {
+                nb = (rand() % 4) + 1;
+            }else{
+                nb = (rand() % 5) + 1;
+            }
+            generateCreatureInTab(nb, depth);
+            initFight(joueur, depth);
+            cleanupAllCreatures();
+            z->ennemis--;
         } else {
             printf("Vous trouvez un loot dans %s !\n", z->nom);
             // Objet loot = genererLootAleatoire();
             // inv_ajouter_objet(&joueur->inv, &loot);
-            z->tresor = 0;
+            z->tresor--;
         }
 
     } else if (z->ennemis > 0) {
         // Seulement un monstre
         printf("Attention ! Un monstre apparaît dans %s !\n", z->nom);
-        // combat(joueur, z->monstre);
-        z->ennemis = 0;
+        int depth = z->profondeur;
+        int nb;
+        if (depth==50)
+        {
+            nb = (rand() % 2) + 1;
+        }else if (depth==100)
+        {
+            nb = (rand() % 3) + 1;
+        }else if (depth==150)
+        {
+            nb = (rand() % 4) + 1;
+        }else{
+            nb = (rand() % 5) + 1;
+        }
+        generateCreatureInTab(nb, depth);
+        initFight(joueur, depth);
+        cleanupAllCreatures();
+        z->ennemis--;
 
     } else if (z->tresor > 0) {
         // Seulement un loot
@@ -219,4 +251,16 @@ void explorerZone(Plongeur *joueur) {
         // inv_ajouter_objet(&joueur->inv, &loot);
         z->tresor = 0;
     }
+
+}
+
+int fin_jeu(Inventaire *inv){
+    if (!inv) return 0;
+    for (int i = 0; i < inv->nb_objets; i++) {
+        Objet *o = &inv->slots[i];
+        if (o->type == OBJ_CARTE && o->data.carte.niveau == 4 && o->quantite > 0) {
+            return 1; // carte trouvée
+        }
+    }
+    return 0;
 }
