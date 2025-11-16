@@ -8,10 +8,12 @@ typedef struct {
     int profondeur;
     int ennemis;
     int tresor;
-    int sure;
 } Zone;
 
-Zone *addZone();
-int printZone(Plongeur *plongeur);
+Zone **newCarte();
+void printCarte(Zone **zone);
+int printZone(Plongeur *plongeur, Zone **zone);
+void deplacement(Plongeur *joueur,Zone **carte);
+
 
 #endif // CARTE_H
