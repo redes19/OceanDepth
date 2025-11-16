@@ -23,9 +23,6 @@ int main() {
     srand(time(NULL));
     char choix[100];
     int fin = 1;
-
-    int depth = 49;
-
     int action = 0;
 
     // Création de la carte et du joueur
@@ -43,6 +40,9 @@ int main() {
             }
             else if (action == 2) {
                 explorerZone(joueur);
+                if(joueur->points_de_vie==0){
+                    fin=0;
+                }
             }
             else if (action == 3) {
                 
