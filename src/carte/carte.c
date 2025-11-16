@@ -1,5 +1,6 @@
 #include "carte.h"
 #include "../joueur/joueur.h"
+#include "../combat/combat.h" 
 
 #include <stdio.h>
 #include <stdlib.h>
