@@ -2,9 +2,8 @@
 #define JOUEUR_H
 
 #include "../carte/carte.h"
-#include "../creature/creature.h"
 #include "../inventaire/inventaire.h"
-
+#include "../creature/creature.h"
 typedef void(*CompAquatique)(Plongeur *plongeur, void *target);
 
 typedef struct Plongeur {
@@ -17,11 +16,10 @@ typedef struct Plongeur {
     int niveau_oxygene_max;
     int niveau_fatigue;
     int perles;
+    Zone *zone;
+    Inventaire inv;
     Effect effect;
     CompAquatique comp[3];
-    Inventaire inv;
-
-    Zone zone;
 } Plongeur;
 
 // compétences aquatiques
@@ -30,8 +28,7 @@ void dechargeElectrique(Plongeur *plongeur, void *target);
 void communicationMarine(Plongeur *plongeur, void *target);
 
 void displayCompAquatique();
-
-Plongeur *initializePlongeur(Zone zone);
+Plongeur *initializePlongeur(Zone *zone);
 void printPlongeur(Plongeur *plongeur);
 void perteO2(Plongeur *plongeur);
 
