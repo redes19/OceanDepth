@@ -85,8 +85,7 @@ int AttackPlayer(Plongeur *plongeur, int idCreature, int depth)
         creature->life = 0;
     }
 
-    // plongeur->niveau_fatigue++;
-    plongeur->niveau_fatigue += 5;
+    plongeur->niveau_fatigue += 2;
     plongeur->niveau_oxygene -= depthLvl(depth);
 
     return creature->life -= damageFinal;
@@ -636,7 +635,7 @@ void initFight(Plongeur *plongeur, int depth)
 
                 if(plongeur->niveau_fatigue > 0) {
                     printf("Vous perdez 1 point de fatigue\n");
-                    plongeur->niveau_fatigue--;
+                    plongeur->niveau_fatigue -= 2;
                 }
 
                 if(plongeur->niveau_oxygene <= 92) {
