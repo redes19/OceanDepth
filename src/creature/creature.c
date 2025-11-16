@@ -148,6 +148,7 @@ CreatureMarine *createCreature(int depth) {
     return creatureMarine;
 }
 
+// Fonction pour insérer les monstre dans un tableau tabOfCreature
 int generateCreatureInTab(int n, int depth) {
     // printf("Generate Creature\n");
 
@@ -196,6 +197,7 @@ int generateCreatureInTab(int n, int depth) {
     return 0;
 }
 
+// Fonction pour afficher les créatures
 void displayCreature() {
     printf("Display Creature\n");
 
