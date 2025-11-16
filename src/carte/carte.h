@@ -1,6 +1,6 @@
 #ifndef CARTE_H
 #define CARTE_H
-
+#include "../inventaire/inventaire.h"
 typedef struct Plongeur Plongeur;
 
 typedef struct {
@@ -11,9 +11,9 @@ typedef struct {
 } Zone;
 
 Zone **newCarte();
-void printCarte(Zone **zone);
+void printCarte(Plongeur *plongeur, Zone **zone);
 int printZone(Plongeur *plongeur, Zone **zone);
 void deplacement(Plongeur *joueur,Zone **carte);
-
+int a_la_carte(Inventaire *inv, int niveau_cible);
 
 #endif // CARTE_H

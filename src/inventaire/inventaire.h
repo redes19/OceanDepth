@@ -31,7 +31,8 @@ typedef enum {
     OBJ_CAPSULE_O2 = 0, // consommable : +O2
     OBJ_TROUSSE_SOIN, // consommable : +PV
     OBJ_ARME, // équipement : modifie l'attaque
-    OBJ_COMBINAISON // équipement : modifie la défense / O2 par tour
+    OBJ_COMBINAISON, // équipement : modifie la défense / O2 par tour
+    OBJ_CARTE //carte
 } TypeObjet;
 
 
@@ -64,6 +65,7 @@ typedef struct {
         struct { int gain_pv; } trousse; // pour OBJ_TROUSSE_SOIN
         StatsArme arme; // pour OBJ_ARME
         StatsCombinaison combi; // pour OBJ_COMBINAISON
+        struct { int niveau; } carte;           // OBJ_CARTE
     } data;
 } Objet;
 
@@ -115,5 +117,6 @@ Objet objet_capsule(const char *nom, int quantite, int gain_o2);
 Objet objet_trousse(const char *nom, int quantite, int gain_pv);
 Objet objet_arme(const char *nom, int atk_min, int atk_max, int o2_par_attaque, int ignore_defense);
 Objet objet_combinaison(const char *nom, int bonus_defense, int o2_par_tour);
+Objet objet_carte(const char *nom, int niveau);
 
 #endif // INVENTAIRE_H

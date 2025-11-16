@@ -5,6 +5,45 @@
  #include "../creature/creature.h"
 
 
+// ------------------------------
+// Implémentation portable strtok_r pour MinGW / Windows
+// ------------------------------
+#if defined(_WIN32) && !defined(strtok_r)
+
+char *strtok_r(char *str, const char *delim, char **saveptr)
+{
+    char *start;
+    char *end;
+
+    if (str != NULL) {
+        *saveptr = str;
+    }
+
+    start = *saveptr;
+    if (start == NULL)
+        return NULL;
+
+    // Passer les délimiteurs initiaux
+    start += strspn(start, delim);
+    if (*start == '\0') {
+        *saveptr = NULL;
+        return NULL;
+    }
+
+    // Trouver la fin du token
+    end = start + strcspn(start, delim);
+    if (*end == '\0') {
+        *saveptr = NULL;
+    } else {
+        *end = '\0';
+        *saveptr = end + 1;
+    }
+
+    return start;
+}
+#endif
+
+
 // =============================================================
 // SAUVEGARDE – IMPLÉMENTATION
 // Choix pédagogique :
@@ -40,7 +79,7 @@ const CreatureMarine *creatures, int nb)
         const CreatureMarine *c = &creatures[i];
         // Adapter aux champs réels de votre struct CreatureMarine
         fprintf(f, "C:%d:%s:%d:%d:%d:%d:%d\n", c->id, c->name,
-        c->life, c->max_life, c->vitesse, c->attaque_minimale, c->attaque_maximale);
+        c->life, c->max_life, c->vitesse, c->min_attack, c->max_attack);
     }
 
 
@@ -80,7 +119,7 @@ CreatureMarine *creatures, int *nb, int capacity)
     {
         int prof = 0; char zone[64]="";
         // format : POSITION:profondeur:zone (zone = fin de ligne)
-        sscanf(line, "POSITION:%d:%63[^\n]", &prof, zone);
+        sscanf(line, "POSITION:%d:63[^\n]", &prof, zone);
         pos->profondeur = prof;
         strncpy(pos->zone, zone, sizeof(pos->zone)-1); pos->zone[sizeof(pos->zone)-1]=0;
     }
@@ -98,12 +137,12 @@ CreatureMarine *creatures, int *nb, int capacity)
         CreatureMarine *c = &creatures[i];
         int id, life, max_life, vit, atk_min, atk_max;
         char name[64];
-        if (sscanf(line, "C:%d:%63[^:]:%d:%d:%d:%d:%d",
+        if (sscanf(line, "C:%d:63[^:]:%d:%d:%d:%d:%d",
         &id, name, &life, &max_life, &vit, &atk_min, &atk_max) == 7) {
             c->id = id; strncpy(c->name, name, sizeof(c->name)-1); c->name[sizeof(c->name)-1]=0;
             c->life = life; c->max_life = max_life; c->vitesse = vit;
-            c->attaque_minimale = atk_min; c->attaque_maximale = atk_max;
-            c->est_vivant = (life > 0);
+            c->min_attack = atk_min; c->max_attack = atk_max;
+            c->life = (life > 0);
         }
     }
     *nb = n;
