@@ -28,6 +28,7 @@ int main() {
     // Création de la carte et du joueur
     Zone **carte = newCarte();
     Plongeur *joueur = initializePlongeur(&carte[0][0]);
+    inv_init(&joueur->inv);
     afficher_intro();
     scanf("%s", choix);
     if (strcmp(choix, "oui") == 0) {
@@ -40,9 +41,7 @@ int main() {
             }
             else if (action == 2) {
                 explorerZone(joueur);
-                if(joueur->points_de_vie==0){
-                    fin=0;
-                }
+                
             }
             else if (action == 3) {
                 
@@ -50,10 +49,10 @@ int main() {
             }
             else if (action == 4) {
                 printCarte(joueur, carte);
-            }
-            else {
+            }else {
                 printf("Action invalide.\n");
             }
+
             if(fin_jeu(&joueur->inv)){
                 fin=0;
             }

@@ -23,6 +23,7 @@ Plongeur *initializePlongeur(Zone *zone) {
     plongeur->comp[1] = dechargeElectrique;
     plongeur->comp[2] = communicationMarine;
     plongeur->zone = zone;
+
     return plongeur;
 }
 
@@ -70,25 +71,25 @@ void printPlongeur(Plongeur *plongeur) {
 }
 
 void perteO2(Plongeur *plongeur) {
-    if (plongeur->zone->profondeur<=100) {
+    if (plongeur->zone->profondeur<=50) {
         if (plongeur->niveau_oxygene >=2) {
             plongeur->niveau_oxygene -=2;
         }else {
             plongeur->points_de_vie -=5;
         }
-    }else if (plongeur->zone->profondeur<=200) {
+    }else if (plongeur->zone->profondeur<=100) {
         if (plongeur->niveau_oxygene >=3) {
             plongeur->niveau_oxygene -=3;
         }else {
             plongeur->points_de_vie -=5;
         }
-    }else if (plongeur->zone->profondeur<=300) {
+    }else if (plongeur->zone->profondeur<=150) {
         if (plongeur->niveau_oxygene >=4) {
             plongeur->niveau_oxygene -=4;
         }else {
             plongeur->points_de_vie -=5;
         }
-    }else if (plongeur->zone->profondeur > 300) {
+    }else if (plongeur->zone->profondeur > 200) {
         if (plongeur->niveau_oxygene >=5) {
             plongeur->niveau_oxygene -=5;
         }else {

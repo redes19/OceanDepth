@@ -1,4 +1,5 @@
 #include "inventaire.h"
+#include "../joueur/joueur.h"
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -573,3 +574,45 @@ int displayInventaire(const Inventaire *inv){
 void DisplayIventaire(void){
   printf("Affichage inventaire indisponible ici : utilisez displayIventaire(&plongeur->inv)\n");
  }
+
+Objet genererLoot(Plongeur *p) {
+
+    int tirage2 = rand() % 4;
+    int niveau = p->zone->profondeur;   // adapte automatiquement
+
+    Objet loot;
+
+    if (tirage2 == 0) {
+        // -------------------------
+        //  Capsule O2
+        // -------------------------
+        printf("Vous trouvez une capsule d'oxygène !\n");
+        loot = objet_capsule("Capsule O2",1, (niveau/50)*20);
+
+    } else if (tirage2 == 1) {
+        // -------------------------
+        //  Trousse de soin
+        // -------------------------
+        printf("Vous trouvez une trousse de soin !\n");
+        loot = objet_trousse("Trousse de soin",1, (niveau/50)*20);
+
+    } else if (tirage2 == 2) {
+        // -------------------------
+        //  Arme
+        // -------------------------
+        printf("Vous trouvez une arme !\n");
+
+        loot = objet_arme("Harpon",  (niveau/50)*2, (niveau/50)*4, 3, 0); 
+
+    } else if (tirage2 == 3) {
+        // -------------------------
+        //  Armure
+        // -------------------------
+        printf("Vous trouvez une combinaison renforcée !\n");
+
+        loot = objet_combinaison("Combinaison renforcee", (niveau/50)*4, 5);
+
+    }
+
+    return loot;
+}

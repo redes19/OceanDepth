@@ -98,11 +98,12 @@ int inv_utiliser_objet(Inventaire *inv, int slot_index,
                        int *o2, int o2_max,
                        int *fatigue);
 
-// Équipement
-int inv_equiper_arme(Inventaire *inv, int slot_index);
+    // Équipement
+    int inv_equiper_arme(Inventaire *inv, int slot_index);
 int inv_equiper_combinaison(Inventaire *inv, int slot_index);
 const Objet* inv_get_arme_equipee(const Inventaire *inv);
 const Objet* inv_get_combinaison_equipee(const Inventaire *inv);
+
 
 // Perles et récompenses
 void inv_ajouter_perles(Inventaire *inv, int montant);
@@ -118,5 +119,5 @@ Objet objet_trousse(const char *nom, int quantite, int gain_pv);
 Objet objet_arme(const char *nom, int atk_min, int atk_max, int o2_par_attaque, int ignore_defense);
 Objet objet_combinaison(const char *nom, int bonus_defense, int o2_par_tour);
 Objet objet_carte(const char *nom, int niveau);
-
+Objet genererLoot(Plongeur *p);
 #endif // INVENTAIRE_H

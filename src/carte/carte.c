@@ -18,25 +18,25 @@ Zone **newCarte() {
         carte[i] = malloc(cols * sizeof(Zone));
     }
 
-    carte[0][0] = (Zone){"Base", 0, 0, 0};
-    carte[0][1] = (Zone){"Ocean", 0, 0, 0};
-    carte[0][2] = (Zone){"Epave", 0, 1, 1};
-    carte[0][3] = (Zone){"Grotte", 0, 1, 0};
+    carte[0][0] = (Zone){"Base", 50, 1, 1};
+    carte[0][1] = (Zone){"Ocean", 50, 1, 1};
+    carte[0][2] = (Zone){"Epave", 50, 1, 1};
+    carte[0][3] = (Zone){"Grotte", 50, 1, 1};
 
-    carte[1][0] = (Zone){"Recif", 50, 2, 0};
-    carte[1][1] = (Zone){"Epave", 50, 2, 1};
-    carte[1][2] = (Zone){"Algues", 50, 0, 0};
-    carte[1][3] = (Zone){"Grotte", 50, 1, 0};
+    carte[1][0] = (Zone){"Recif", 100, 1, 1};
+    carte[1][1] = (Zone){"Epave", 100, 1, 1};
+    carte[1][2] = (Zone){"Algues", 100, 1, 0};
+    carte[1][3] = (Zone){"Grotte", 100, 1, 1};
 
-    carte[2][0] = (Zone){"Requin", 150, 3, 0};
-    carte[2][1] = (Zone){"Vide", 150, 0, 0};
-    carte[2][2] = (Zone){"Kraken", 150, 5, 1};
-    carte[2][3] = (Zone){"Vide", 150, 0, 0};
+    carte[2][0] = (Zone){"Requin", 150, 1, 0};
+    carte[2][1] = (Zone){"Vide", 150, 1, 1};
+    carte[2][2] = (Zone){"Kraken", 150, 1, 0};
+    carte[2][3] = (Zone){"Vide", 150, 1, 1};
 
-    carte[3][0] = (Zone){"Abyss", 300, 4, 1};
-    carte[3][1] = (Zone){"Fosse", 300, 2, 0};
-    carte[3][2] = (Zone){"Epave Géante", 300, 6, 1};
-    carte[3][3] = (Zone){"Caverne Noire", 300, 3, 0};
+    carte[3][0] = (Zone){"Abyss", 200,1, 0};
+    carte[3][1] = (Zone){"Fosse", 200, 1, 0};
+    carte[3][2] = (Zone){"Epave Géante", 200, 1, 1};
+    carte[3][3] = (Zone){"Caverne Noire", 200, 1, 1};
 
     return carte;
 }
@@ -131,16 +131,17 @@ void deplacement(Plongeur *joueur, Zone **carte) {
            joueur->zone->nom, ligne + 1, colonne + 1);
 
     // Afficher options
-    printf("1 - Aller à gauche\n");
-    printf("2 - Aller à droite\n");
+    printf("1 - Aller a gauche\n");
+    printf("2 - Aller a droite\n");
+    
+    // Descendre seulement si on a la carte pour le niveau inférieur
+    if (ligne < 3) {
+        printf("3 - Descendre (nécessite carte)\n");
+    }
 
     // Monter seulement si on n'est pas en surface
     if (ligne > 0) {
-        printf("3 - Monter\n");
-    }
-    // Descendre seulement si on a la carte pour le niveau inférieur
-    if (ligne < 3) {
-        printf("4 - Descendre (nécessite carte)\n");
+        printf("4 - Monter\n");
     }
 
     int choix = 0;
@@ -156,17 +157,17 @@ void deplacement(Plongeur *joueur, Zone **carte) {
         case 2: // droite
             colonne_suivante = (colonne + 1) % 4;
             break;
-        case 3: // monter
+        case 4: // monter
             if (ligne == 0) {
-                printf("Vous êtes déjà en surface, impossible de monter.\n");
+                printf("Vous etes deja en surface, impossible de monter.\n");
                 return;
             }
             ligne_suivante = ligne - 1;
             break;
-        case 4: // descendre
+        case 3: // descendre
             ligne_suivante = ligne + 1;
             if (!a_la_carte(&joueur->inv, ligne_suivante + 1)) {
-                printf("Vous n'avez pas la carte pour descendre à ce niveau !\n");
+                printf("Vous n'avez pas la carte pour descendre a ce niveau !\n");
                 return;
             }
             break;
@@ -187,70 +188,101 @@ void explorerZone(Plongeur *joueur) {
 
     // Si la zone est déjà vide
     if (z->tresor == 0 && z->ennemis == 0) {
-        printf("Vous avez déjà exploré cette zone, rien à trouver.\n");
+        printf("Vous n'avez rien à trouver dans cette zone, .\n");
         return;
     }
 
     if (z->tresor > 0 && z->ennemis > 0) {
         // Les deux présents → tirage aléatoire
         srand((unsigned int)time(NULL));
-        int tirage = rand() % 2; // 0 = monstre, 1 = loot
+        int tirage = rand() % 3; // 0 = monstre, 1 = loot, 2 = carte
 
         if (tirage == 0) {
-            printf("Attention ! Un monstre apparaît dans %s !\n", z->nom);
+            printf("Attention ! Un monstre apparait dans %s !\n", z->nom);
             int depth = z->profondeur;
             int nb;
             if (depth==50)
             {
-                nb = (rand() % 2) + 1;
+                nb = 1;
             }else if (depth==100)
             {
-                nb = (rand() % 3) + 1;
+                nb = (rand() % 2) + 1;
             }else if (depth==150)
             {
-                nb = (rand() % 4) + 1;
+                nb = (rand() % 3) + 1;
             }else{
-                nb = (rand() % 5) + 1;
+                nb = (rand() % 4) + 1;
             }
             generateCreatureInTab(nb, depth);
             initFight(joueur, depth);
             cleanupAllCreatures();
             z->ennemis--;
-        } else {
-            printf("Vous trouvez un loot dans %s !\n", z->nom);
-            // Objet loot = genererLootAleatoire();
-            // inv_ajouter_objet(&joueur->inv, &loot);
-            z->tresor--;
+        }
+        else if(tirage == 1) {
+            printf("Vous trouvez un tresor dans %s !\n", z->nom);
+            Objet loot = genererLoot(joueur);
+            inv_ajouter_objet(&joueur->inv,&loot);
+        }else{
+            printf("Brovo vous avez trouvez une carte ce qui vous permet d'aller plus profont");
+            if(joueur->zone->profondeur==50){
+                Objet carte1 = objet_carte("Carte Niveau 2", 2);
+                inv_ajouter_objet(&joueur->inv,&carte1);
+            }else if(joueur->zone->profondeur==100){
+                Objet carte2 = objet_carte("Carte Niveau 3", 3);
+                inv_ajouter_objet(&joueur->inv,&carte2);
+            }else if(joueur->zone->profondeur==150){
+                Objet carte3 = objet_carte("Carte Niveau 4", 4);
+                inv_ajouter_objet(&joueur->inv,&carte3);
+            }else if(joueur->zone->profondeur==200){
+                Objet carte4 = objet_carte("Carte Niveau 5", 5);
+                inv_ajouter_objet(&joueur->inv,&carte4);
+            }
+            
         }
 
     } else if (z->ennemis > 0) {
         // Seulement un monstre
-        printf("Attention ! Un monstre apparaît dans %s !\n", z->nom);
+        printf("Attention ! Un monstre apparait dans %s !\n", z->nom);
         int depth = z->profondeur;
         int nb;
         if (depth==50)
         {
-            nb = (rand() % 2) + 1;
+            nb =1;
         }else if (depth==100)
         {
-            nb = (rand() % 3) + 1;
+            nb = (rand() % 2) + 1;
         }else if (depth==150)
         {
-            nb = (rand() % 4) + 1;
+            nb = (rand() % 3) + 1;
         }else{
-            nb = (rand() % 5) + 1;
+            nb = (rand() % 4) + 1;
         }
         generateCreatureInTab(nb, depth);
         initFight(joueur, depth);
         cleanupAllCreatures();
-        z->ennemis--;
-
     } else if (z->tresor > 0) {
-        // Seulement un loot
-        printf("Vous trouvez un loot dans %s !\n", z->nom);
-        // Objet loot = genererLootAleatoire();
-        // inv_ajouter_objet(&joueur->inv, &loot);
-        z->tresor = 0;
+        int tirage3 = rand() % 2;
+        printf("Vous trouvez un tresor dans %s !\n", z->nom);
+        if(tirage3==0){
+            Objet loot = genererLoot(joueur);
+            inv_ajouter_objet(&joueur->inv,&loot);
+        }else{
+            printf("Brovo vous avez trouvez une carte ce qui vous permet d'aller plus profont");
+            if(joueur->zone->profondeur==50){
+                Objet carte1 = objet_carte("Carte Niveau 2", 2);
+                inv_ajouter_objet(&joueur->inv,&carte1);
+            }else if(joueur->zone->profondeur==100){
+                Objet carte2 = objet_carte("Carte Niveau 3", 3);
+                inv_ajouter_objet(&joueur->inv,&carte2);
+            }else if(joueur->zone->profondeur==150){
+                Objet carte3 = objet_carte("Carte Niveau 4", 4);
+                inv_ajouter_objet(&joueur->inv,&carte3);
+            }else if(joueur->zone->profondeur==200){
+                Objet carte4 = objet_carte("Carte Niveau 5", 5);
+                inv_ajouter_objet(&joueur->inv,&carte4);
+            }
+            
+        }
     }
 
 }
@@ -259,7 +291,7 @@ int fin_jeu(Inventaire *inv){
     if (!inv) return 0;
     for (int i = 0; i < inv->nb_objets; i++) {
         Objet *o = &inv->slots[i];
-        if (o->type == OBJ_CARTE && o->data.carte.niveau == 4 && o->quantite > 0) {
+        if (o->type == OBJ_CARTE && o->data.carte.niveau == 5 && o->quantite > 0) {
             return 1; // carte trouvée
         }
     }
