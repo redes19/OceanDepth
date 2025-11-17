@@ -455,7 +455,7 @@ int checkEffectPlongeur(Plongeur *plongeur)
         {
             is_poisoned++;
             printf("Vous perder 10 PV du au poison\n");
-            // mettre les dégats du poison !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            plongeur->points_de_vie -= 10;
         }
 
         if (is_poisoned > 2)
